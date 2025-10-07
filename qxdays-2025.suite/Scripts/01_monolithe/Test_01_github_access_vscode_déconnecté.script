@@ -1,0 +1,16 @@
+﻿// Ouvrir le navigateur sur le site de test
+set myUrl to "https://github.com/lucienbill/obsidian-daily-notes"
+"01_monolithe/00_common".ouvrir_chrome myUrl
+waitfor 10, text:"lucienbill/obsidian-daily-notes", SearchRectangle: [0,93,RemoteScreenSize().x, 300]
+
+// Tenter d'ouvrir VS Code
+typeText "."
+wait 5
+
+// Vérifier que VS Code n'est pas ouvert
+waitfor 10, text:"github.com/lucienbill/obsidian-daily-notes", SearchRectangle: [0,0,RemoteScreenSize().x, 93]
+waitfor 10, text:"lucienbill/obsidian-daily-notes", SearchRectangle: [0,93,RemoteScreenSize().x, 300]
+
+// Quitter le navigateur
+typeText altKey, f4
+WaitForNotFound 15, "01_monolithe/chrome_icone_chargement"

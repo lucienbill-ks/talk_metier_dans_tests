@@ -1,0 +1,116 @@
+﻿Log "Se connecter à Github ..."
+set myUrl to "https://github.com/login"
+"01_monolithe/00_common".ouvrir_chrome myUrl
+Click text:"Username or email address"
+
+Log "Ouvrir Keepass, l'utiliser pour taper les credentials ..."
+Log "|   Ouvrir Keepass ..."
+TypeText windowsKey, "r"
+wait 0.5
+set cmd to "C:\Program Files\KeePass Password Safe 2\KeePass.exe" && <<"C:\Users\lucibill\OneDrive - Keysight Technologies\Documents\Keepass\test-EPF.kdbx">>
+typeText cmd, returnKey
+WaitFor 8.0, "01_monolithe/keepass_keys_logo"
+wait 0.5
+
+Log "|   Déverrouiller le coffre ..."
+set cryptKey to env("EPF_SECRET_KEY")
+set encodedSecret to "TZCSfHeXQARHBS[WMULXHD\MOUJFSZbJEN@ePLGgUJDX>J>IQFRQ=KPVVWWXW\Jd"
+	
+TypeHiddenText DecodeText(encodedSecret, cryptKey)
+typeText  returnkey
+WaitForAll 25, "01_monolithe/keepass_icon_lock",  "01_monolithe/keepasslogo_topmenu"
+
+Log "|   Utiliser l'auto-type de Keepass pour le login / mot de passe GitHub ..."
+click text:"GitHub with OTP", validwords:"*"
+wait 0.5
+TypeText controlKey, "v"
+wait 5	
+
+Log "|   Utiliser le code OTP ..."
+waitfor 30, text:"Two-factor authentication"
+typeText altKey, tabkey
+wait 1
+TypeText controlKey, "t"
+wait 0.5
+TypeText altKey, tabKey
+wait 1
+TypeText shiftKey, insertkey
+TypeText returnKey
+wait 2
+
+Log "|   Vérifier qu'on est bien authentifié ..."
+WaitFor 30, text:"You've been added to the keysight-eggplant organization."
+LogSuccess "Se connecter à Github : OK"
+
+Log "Aller sur la page de test ..."
+typeText f6
+typeText "https://github.com/lucienbill/obsidian-daily-notes", returnkey
+wait 1
+waitfor 10, text:"lucienbill/obsidian-daily-notes", SearchRectangle: [0,93,RemoteScreenSize().x, 300], IgnoreSpaces:YES
+LogSuccess "Aller sur la page de test OK"
+
+Log "Ouvrir VS Code en ligne ..."
+typeText "."
+wait 5
+waitforAll 60, {text:"github.dev/lucienbill/obsidian-daily-notes", SearchRectangle:empty}, {text:"The extension 'GitHub Repositories' wants to sign in using GitHub."}
+LogSuccess "Ouvrir VS Code en ligne : OK"
+
+Log "Autoriser le login et attendre le chargement du repo ..."
+click text:"Allow"
+wait 1
+click text:"lucienbill-ks"
+wait 4
+WaitFor 30, text:"What's that thing for (description)?"
+LogSuccess "Autoriser le login et attendre le chargement du repo : OK"
+
+Log "Vérifier qu'on peut créer un nouveau fichier ..."
+MoveTo text:"en-US", waitFor:30
+click "01_monolithe/vscode_create_new_file"
+wait 2
+
+set filename to "aubergine.md"
+
+typeText filename, returnkey
+wait 2
+typeText "this is a new file!", returnkey
+WaitFor 4, text:"this is a new file!"
+LogSuccess "Vérifier qu'on peut créer un nouveau fichier : OK"
+
+
+Log "Supprimer le fichier ..."
+// subtilité : le nom est présent à plusieurs endroits, on fait un click droit sur celui qui est le plus à gauche de l'écran
+set myList to EveryImageLocation(text:filename)
+set ref_coord to RemoteScreenSize()
+Repeat with each item myCoord of myList
+// keep the one that is more on the left
+if myCoord.x is less than ref_coord
+set ref_coord to myCoord
+end if
+End repeat
+
+RightClick ref_coord
+Click text:"Allow", waitfor:15
+
+
+// supprimer le fichier
+wait 1
+click text: "Delete Permanently"
+wait 1
+waitfor 30, text: "Are you sure you want to permanently delete"
+typeText returnkey	
+wait 1
+WaitForNotFound 15, text: filename
+LogSuccess "Supprimer le fichier : OK"
+
+Log "Tout fermer ..."
+typeText altkey, f4
+wait 0.5
+WaitFor 15, text:"Leave site?"
+typeText returnkey
+WaitForNotFound 15, "01_monolithe/chrome_icone_chargement"
+
+
+typeText altkey, f4
+WaitForNotFound 15, "01_monolithe/keepasslogo_topmenu"
+LogSuccess "Tout fermer : OK"
+
