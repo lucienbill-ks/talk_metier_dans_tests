@@ -1,0 +1,3 @@
+﻿to get_test_repo_url
+	return "https://github.com/lucienbill/obsidian-daily-notes"
+end get_test_repo_url

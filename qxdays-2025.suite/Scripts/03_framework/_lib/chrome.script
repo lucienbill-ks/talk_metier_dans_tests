@@ -1,0 +1,27 @@
+﻿to ouvrir_chrome myUrl:"about:blank"
+	set myCMD to "chrome.exe" && myUrl && "--start-maximized" && "--incognito"
+	"03_framework/_lib/system".je_lance_une_commande_windows_r myCMD, returnKey
+	
+	WaitFor 30.0, "03_framework/chrome/icone_chargement"
+end ouvrir_chrome
+
+to bool_chrome_est_il_ouvert
+	set myZone to "03_framework/_lib/system".zoneEcran("taskbar_windows")
+	set isChromeOpened to ImageFound(Image:"03_framework/chrome/taskbar_app_is_opened", WaitFor:2, SearchRectangle: myZone)
+	return isChromeOpened
+end bool_chrome_est_il_ouvert
+
+to aller_a_url myUrl
+	logfct myUrl
+	if not bool_chrome_est_il_ouvert()
+		ouvrir_chrome myUrl
+	else
+		WaitFor 30.0, "03_framework/chrome/icone_chargement"
+		typeText f6
+		wait 0.5
+		typeText myUrl, returnKey
+		wait 1
+		WaitFor 30.0, "03_framework/chrome/icone_chargement"
+	end if
+	logFct
+end aller_a_url

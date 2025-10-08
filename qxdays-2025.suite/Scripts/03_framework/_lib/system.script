@@ -1,0 +1,18 @@
+﻿to je_lance_une_commande_windows_r cmd:empty
+	TypeText windowsKey, "r"
+	wait 0.5
+	typeText cmd, returnKey
+	wait 1
+end je_lance_une_commande_windows_r
+
+to zoneEcran nomZone
+	set knownZones to {
+		"taskbar_windows":[[0,RemoteScreenSize().y - 50],RemoteScreenSize()]
+	}
+	
+	if nomZone is not in the keys of knownZones then
+		Throw "Paramètre invalide : nom de zone", !"La zone '[[nomZone]]' est inconnue. Zones connues : [[the keys of knownZones]]"
+	end if
+	
+	return knownZones.(nomZone)
+end zoneEcran

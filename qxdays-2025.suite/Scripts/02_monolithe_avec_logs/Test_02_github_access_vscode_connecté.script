@@ -15,7 +15,7 @@ wait 0.5
 Log "|   Déverrouiller le coffre ..."
 set cryptKey to env("EPF_SECRET_KEY")
 set encodedSecret to "TZCSfHeXQARHBS[WMULXHD\MOUJFSZbJEN@ePLGgUJDX>J>IQFRQ=KPVVWWXW\Jd"
-	
+
 TypeHiddenText DecodeText(encodedSecret, cryptKey)
 typeText  returnkey
 WaitForAll 25, "01_monolithe/keepass_icon_lock",  "01_monolithe/keepasslogo_topmenu"
@@ -82,10 +82,10 @@ Log "Supprimer le fichier ..."
 set myList to EveryImageLocation(text:filename)
 set ref_coord to RemoteScreenSize()
 Repeat with each item myCoord of myList
-// keep the one that is more on the left
-if myCoord.x is less than ref_coord
-set ref_coord to myCoord
-end if
+	// keep the one that is more on the left
+	if myCoord.x is less than ref_coord
+		set ref_coord to myCoord
+	end if
 End repeat
 
 RightClick ref_coord

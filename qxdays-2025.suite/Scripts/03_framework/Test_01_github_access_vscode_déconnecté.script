@@ -1,12 +1,6 @@
-﻿log "Ouvrir le navigateur sur le site de test ..."
-set myUrl to "https://github.com/lucienbill/obsidian-daily-notes"
-"01_monolithe/00_common".ouvrir_chrome myUrl
-waitfor 10, text:"lucienbill/obsidian-daily-notes", SearchRectangle: [0,93,RemoteScreenSize().x, 300]
-logSuccess "Ouvrir le navigateur sur le site de test : OK"
+﻿"03_framework/steps/github".je_vais_sur_le_repo_de_test
 
-Log "Tenter d'ouvrir VS Code"
-typeText "."
-wait 5
+"03_framework/steps/github".je_tente_d_ouvrir_vs_code_online
 
 Log "Vérifier que VS Code n'est pas ouvert ..."
 waitfor 10, text:"github.com/lucienbill/obsidian-daily-notes", SearchRectangle: [0,0,RemoteScreenSize().x, 93]
