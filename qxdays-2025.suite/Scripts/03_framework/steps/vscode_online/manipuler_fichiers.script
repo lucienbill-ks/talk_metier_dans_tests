@@ -1,0 +1,48 @@
+﻿to je_cree_un_nouveau_fichier
+	logfct
+	MoveTo text:"en-US", waitFor:30
+	cliquer "01_monolithe/vscode_create_new_file"
+	wait 2
+	
+	set filename to "aubergine.md"
+	
+	typeText filename, returnkey
+	wait 2
+	attendre filename
+	logfct
+end je_cree_un_nouveau_fichier
+
+to j_ecris_dans_le_nouveau_fichier
+	logfct
+	typeText "this is a new file!", returnkey
+	WaitFor 4, text:"this is a new file!"
+	logfct
+end j_ecris_dans_le_nouveau_fichier
+
+to je_supprimme_le_nouveau_fichier
+	logfct
+	set filename to "aubergine.md"
+	// subtilité : le nom est présent à plusieurs endroits, on fait un click droit sur celui qui est le plus à gauche de l'écran
+	set myList to EveryImageLocation(text:filename)
+	set ref_coord to RemoteScreenSize()
+	Repeat with each item myCoord of myList
+		// keep the one that is more on the left
+		if myCoord.x is less than ref_coord
+			set ref_coord to myCoord
+		end if
+	End repeat
+	
+	rightclick ref_coord
+	cliquer text:"Allow", waitfor:15
+	
+	
+	// supprimer le fichier
+	wait 1
+	cliquer "Delete Permanently"
+	wait 1
+	attendre  "Are you sure you want to permanently delete"
+	typeText returnkey	
+	wait 1
+	WaitForNotFound 15, text: filename
+	logfct
+end je_supprimme_le_nouveau_fichier

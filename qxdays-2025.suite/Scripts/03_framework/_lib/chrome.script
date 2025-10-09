@@ -27,5 +27,5 @@ to aller_a_url myUrl
 end aller_a_url
 
 to attendre_que_le_chargement_de_la_page_soit_fini
-	WaitFor 30.0, "03_framework/chrome/icone_chargement"
+	attendre "03_framework/chrome/icone_chargement"
 end attendre_que_le_chargement_de_la_page_soit_fini

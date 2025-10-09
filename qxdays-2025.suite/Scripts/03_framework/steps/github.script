@@ -15,16 +15,16 @@ to je_m_authentifie_a_github
 	logfct
 	"03_framework/_lib/chrome".aller_a_url "github.com/login"
 	
-	Click text:"Username or email address"
+	cliquer "Username or email address"
 	
 	"03_framework/_lib/keepass".ouvrir_et_deverouiller_keepass
 	
 	"03_framework/_lib/keepass".utiliser_autotype_de_entree_x "GitHub with OTP"
 	
-	waitfor 30, text:"Two-factor authentication"
+	attendre "Two-factor authentication"
 	
 	"03_framework/_lib/keepass".utiliser_code_otp_de_entree_selectionnee
 	
-	WaitFor 30, text:"You've been added to the keysight-eggplant organization."
+	attendre "You've been added to the keysight-eggplant organization."
 	logfct
 end je_m_authentifie_a_github

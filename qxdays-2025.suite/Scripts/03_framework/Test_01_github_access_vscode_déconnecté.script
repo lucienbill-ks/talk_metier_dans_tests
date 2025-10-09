@@ -2,7 +2,7 @@
 
 "03_framework/steps/github".je_tente_d_ouvrir_vs_code_online
 
-"03_framework/steps/vscode_online".je_verifie_que_vscode_online_n_est_pas_ouvert
+"03_framework/steps/vscode_online/etat_app".je_verifie_que_vscode_online_n_est_pas_ouvert
 
 "03_framework/steps/system".je_quitte_les_applications
 

@@ -1,6 +1,6 @@
 ﻿to _parse_parameters_for_image_or_txt_search with text_or_image_or_options:empty, moreOptions:{}
 	// This is complex code, you probably don't want to touch it
-
+	
 	// === mandatory parameters ===
 	set err_param_message to <<accepted formats for the parameters are:
 - text to find, or image name. Examples: "my text" ; "path/to/my_reference_image"
@@ -69,7 +69,7 @@
 		end if
 	    *)
 		
-	else if number_of_txt_or_img_param is 0 then
+		else if number_of_txt_or_img_param is 0 then
 		// It's not a propery list, it's a text
 		
 		// Is it an image or a text?
@@ -93,6 +93,7 @@
 	
 	// If no timeout has been defined, set it to a default value
 	add properties {waitfor:30} to options
+	add properties {searchRectangle:empty} to options
 
 	//log "DEBUG" && text_or_image_or_options
 	//log "DEBUG" && options
@@ -103,7 +104,7 @@ end _parse_parameters_for_image_or_txt_search
 
 to _parse_parameters_for_image_or_txt_search_waitfor with text_or_image_or_options:empty, moreOptions:{}
 	// This is complex code, you probably don't want to touch it
-
+	
 	set options to _parse_parameters_for_image_or_txt_search(text_or_image_or_options, moreOptions)
 	
 	// split the "waitfor" into a dedicated parameter

@@ -14,7 +14,7 @@ to ouvrir_et_deverouiller_keepass
 	set cmd to "C:\Program Files\KeePass Password Safe 2\KeePass.exe" && path_to_vault
 	"03_framework/_lib/system".je_lance_une_commande_windows_r cmd
 	
-	WaitFor 8.0, "03_framework/keepass/keys_logo"
+	attendre "03_framework/keepass/keys_logo"
 	wait 0.5
 	
 	set cryptKey to env("EPF_SECRET_KEY")
@@ -31,7 +31,7 @@ end ouvrir_et_deverouiller_keepass
 
 to utiliser_autotype_de_entree_x myItem
 	logfct myItem
-	click text:myItem, validwords:"*"
+	cliquer myItem, validwords:"*"
 	wait 0.5
 	TypeText controlKey, "v"
 	wait 5	
