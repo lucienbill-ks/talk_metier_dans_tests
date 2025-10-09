@@ -162,14 +162,14 @@ to ImageRectangle myparam
 			Throw "Image not found", myParam
 		end if
 		return FoundImageInfo().imageRectangle
-	Catch theException
+		Catch theException
 		throw theException
 	End try
 	
 end ImageRectangle
 
 
-to Throw with theException, thereason
+(*to Throw with theException, thereason
 	// This is a rewrite of the standard "Throw" function,
 	// but it writes addisional callstack information in the error message
 	
@@ -196,7 +196,7 @@ to Throw with theException, thereason
 	set thereason to thereason & newline & newline & my_stack
 	
 	send throw theException, thereason to SenseTalk
-end Throw
+end Throw*)
 
 to ScrollWheelUp scrollAmount
 	send ScrollWheelUp scrollAmount to SenseTalk

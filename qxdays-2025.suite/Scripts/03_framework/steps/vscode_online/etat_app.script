@@ -14,7 +14,7 @@ end je_verifie_que_vscode_online_n_est_pas_ouvert
 to je_verifie_que_vscode_online_s_est_ouvert
 	logfct
 	attendre "github.dev/lucienbill/obsidian-daily-notes", SearchRectangle:empty
-	wait 10 // FIXME : on peut faire plus subtil
+	wait 4 // FIXME : on peut faire plus subtil
 	attendre "The extension 'GitHub Repositories' wants to sign in using GitHub."
 	
 	Log "Autoriser le login et attendre le chargement du repo ..."
