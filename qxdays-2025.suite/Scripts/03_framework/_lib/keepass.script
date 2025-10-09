@@ -1,0 +1,53 @@
+﻿to je_quitte_keepass_si_ouvert
+	logfct
+	if imagefound(image:"03_framework/keepass/logo_topmenu", waitfor:5)
+		typeText altkey, f4
+		WaitForNotFound 15, "03_framework/keepass/logo_topmenu"
+	end if
+	WaitForNotFound 15, "03_framework/keepass/taskbar_icon_active" //FIXME : c'est une logique simplifiée pour la démo
+	logfct
+end je_quitte_keepass_si_ouvert
+
+to ouvrir_et_deverouiller_keepass
+	logfct
+	set path_to_vault to <<"C:\Users\lucibill\OneDrive - Keysight Technologies\Documents\Keepass\test-EPF.kdbx">>
+	set cmd to "C:\Program Files\KeePass Password Safe 2\KeePass.exe" && path_to_vault
+	"03_framework/_lib/system".je_lance_une_commande_windows_r cmd
+	
+	WaitFor 8.0, "03_framework/keepass/keys_logo"
+	wait 0.5
+	
+	set cryptKey to env("EPF_SECRET_KEY")
+	if cryptKey is empty then
+		Throw "Missing env. variable", "the environment variable 'EPF_SECRET_KEY' must not be empty"
+	end if
+	set encodedSecret to "TZCSfHeXQARHBS[WMULXHD\MOUJFSZbJEN@ePLGgUJDX>J>IQFRQ=KPVVWWXW\Jd"
+	
+	TypeHiddenText DecodeText(encodedSecret, cryptKey)
+	typeText  returnkey
+	WaitForAll 25, "03_framework/keepass/icon_lock",  "03_framework/keepass/logo_topmenu"
+	logfct
+end ouvrir_et_deverouiller_keepass
+
+to utiliser_autotype_de_entree_x myItem
+	logfct myItem
+	click text:myItem, validwords:"*"
+	wait 0.5
+	TypeText controlKey, "v"
+	wait 5	
+	logfct
+end utiliser_autotype_de_entree_x
+
+to utiliser_code_otp_de_entree_selectionnee
+	logfct
+	typeText altKey, tabkey // FIXME potentiellement à sortir hors de cette fonction
+	wait 1
+	TypeText controlKey, "t"
+	wait 0.5
+	TypeText altKey, tabKey
+	wait 1
+	TypeText shiftKey, insertkey
+	TypeText returnKey
+	wait 2
+	logfct
+end utiliser_code_otp_de_entree_selectionnee

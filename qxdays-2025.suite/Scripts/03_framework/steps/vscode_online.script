@@ -1,7 +1,84 @@
-(*
+﻿(*
 Idées : 
     Variante 1 : simple. juste des fichiers dans les steps
     Variante 2 : séparer les steps fonctionels (publics) des steps techniques (privés)
     Variante 3 : différencier actions et validations dans des scripts distincts
     Variante 4 : version simple, mais appliquée à la CAS (but : démontrer la puissance de la computer vision)
 *)
+
+to je_verifie_que_vscode_online_n_est_pas_ouvert
+	logfct
+	wait 2
+	"03_framework/_lib/chrome".attendre_que_le_chargement_de_la_page_soit_fini
+	WaitForNotFound 5, text:"github.dev"
+	set repo_url to "03_framework/_lib/github".get_test_repo_url
+	delete "https://" from repo_url
+	waitfor 10, text:repo_url, SearchRectangle: [0,0,RemoteScreenSize().x, 93]
+	delete "github.com/" from repo_url
+	waitfor 10, text:repo_url, SearchRectangle: [0,93,RemoteScreenSize().x, 300], IgnoreSpaces:YES
+	logfct	
+end je_verifie_que_vscode_online_n_est_pas_ouvert
+
+to je_verifie_que_vscode_online_s_est_ouvert
+	logfct
+	waitfor 60, text:"github.dev/lucienbill/obsidian-daily-notes", SearchRectangle:empty
+	wait 10 // FIXME : on peut faire plus subtil
+	waitfor 60, text:"The extension 'GitHub Repositories' wants to sign in using GitHub."
+	
+	Log "Autoriser le login et attendre le chargement du repo ..."
+	click text:"Allow"
+	wait 1
+	click text:"lucienbill-ks"
+	wait 4
+	WaitFor 30, text:"What's that thing for (description)?"
+	logfct
+end je_verifie_que_vscode_online_s_est_ouvert
+
+to je_cree_un_nouveau_fichier
+	logfct
+	MoveTo text:"en-US", waitFor:30
+	click "01_monolithe/vscode_create_new_file"
+	wait 2
+	
+	set filename to "aubergine.md"
+	
+	typeText filename, returnkey
+	wait 2
+	waitfor 30, text:filename
+	logfct
+end je_cree_un_nouveau_fichier
+
+to j_ecris_dans_le_nouveau_fichier
+	logfct
+	typeText "this is a new file!", returnkey
+	WaitFor 4, text:"this is a new file!"
+	logfct
+end j_ecris_dans_le_nouveau_fichier
+
+to je_supprimme_le_nouveau_fichier
+	logfct
+	set filename to "aubergine.md"
+	// subtilité : le nom est présent à plusieurs endroits, on fait un click droit sur celui qui est le plus à gauche de l'écran
+	set myList to EveryImageLocation(text:filename)
+	set ref_coord to RemoteScreenSize()
+	Repeat with each item myCoord of myList
+		// keep the one that is more on the left
+		if myCoord.x is less than ref_coord
+			set ref_coord to myCoord
+		end if
+	End repeat
+	
+	RightClick ref_coord
+	Click text:"Allow", waitfor:15
+	
+	
+	// supprimer le fichier
+	wait 1
+	click text: "Delete Permanently"
+	wait 1
+	waitfor 30, text: "Are you sure you want to permanently delete"
+	typeText returnkey	
+	wait 1
+	WaitForNotFound 15, text: filename
+	logfct
+end je_supprimme_le_nouveau_fichier

@@ -2,13 +2,7 @@
 
 "03_framework/steps/github".je_tente_d_ouvrir_vs_code_online
 
-Log "Vérifier que VS Code n'est pas ouvert ..."
-waitfor 10, text:"github.com/lucienbill/obsidian-daily-notes", SearchRectangle: [0,0,RemoteScreenSize().x, 93]
-waitfor 10, text:"lucienbill/obsidian-daily-notes", SearchRectangle: [0,93,RemoteScreenSize().x, 300]
+"03_framework/steps/vscode_online".je_verifie_que_vscode_online_n_est_pas_ouvert
 
-LogSuccess "Vérifier que VS Code n'est pas ouvert : OK"
+"03_framework/steps/system".je_quitte_les_applications
 
-log "Quitter le navigateur ..."
-typeText altKey, f4
-WaitForNotFound 15, "01_monolithe/chrome_icone_chargement"
-logSuccess "Quitter le navigateur : OK"

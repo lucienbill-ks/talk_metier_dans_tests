@@ -1,0 +1,16 @@
+﻿to je_quitte_les_applications
+	logfct
+	// Fermer Chrome
+	typeText altKey, f4
+	wait 1 
+	if imagefound(text:"Leave site?", waitfor:4, searchRectangle:empty) then typeText returnkey
+	WaitForNotFound 15, "01_monolithe/chrome_icone_chargement"
+	if "03_framework/_lib/chrome".bool_chrome_est_il_ouvert()
+		Throw "Echec de la fermeture du navigateur", "voir capture d'écran"
+	end if
+	
+	// Fermer Keepass s'il est ouvert
+	"03_framework/_lib/keepass".je_quitte_keepass_si_ouvert
+	
+	logfct
+end je_quitte_les_applications

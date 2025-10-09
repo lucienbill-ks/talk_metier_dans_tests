@@ -2,7 +2,7 @@
 	set myCMD to "chrome.exe" && myUrl && "--start-maximized" && "--incognito"
 	"03_framework/_lib/system".je_lance_une_commande_windows_r myCMD, returnKey
 	
-	WaitFor 30.0, "03_framework/chrome/icone_chargement"
+	attendre_que_le_chargement_de_la_page_soit_fini
 end ouvrir_chrome
 
 to bool_chrome_est_il_ouvert
@@ -16,12 +16,16 @@ to aller_a_url myUrl
 	if not bool_chrome_est_il_ouvert()
 		ouvrir_chrome myUrl
 	else
-		WaitFor 30.0, "03_framework/chrome/icone_chargement"
+		attendre_que_le_chargement_de_la_page_soit_fini
 		typeText f6
 		wait 0.5
 		typeText myUrl, returnKey
 		wait 1
-		WaitFor 30.0, "03_framework/chrome/icone_chargement"
+		attendre_que_le_chargement_de_la_page_soit_fini
 	end if
 	logFct
 end aller_a_url
+
+to attendre_que_le_chargement_de_la_page_soit_fini
+	WaitFor 30.0, "03_framework/chrome/icone_chargement"
+end attendre_que_le_chargement_de_la_page_soit_fini
