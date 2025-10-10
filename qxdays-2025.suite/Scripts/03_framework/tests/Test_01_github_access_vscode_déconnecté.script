@@ -1,8 +1,9 @@
-﻿"03_framework/steps/github".je_vais_sur_le_repo_de_test
+﻿BeginTestCase "GitHub: vérifier qu'on ne peut pas accéder à VS Code online quand on n'est pas authentifié"
+"03_framework/steps/github".je_vais_sur_le_repo_de_test
 
 "03_framework/steps/github".je_tente_d_ouvrir_vs_code_online
 
 "03_framework/steps/vscode_online/etat_app".je_verifie_que_vscode_online_n_est_pas_ouvert
 
 "03_framework/steps/system".je_quitte_les_applications
-
+EndTestCase "GitHub: vérifier qu'on ne peut pas accéder à VS Code online quand on n'est pas authentifié"

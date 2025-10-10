@@ -1,4 +1,5 @@
-﻿"03_framework/steps/github".je_m_authentifie_a_github
+﻿BeginTestCase "GitHub: vérifier peut accéder à VS Code online quand on est authentifié"
+"03_framework/steps/github".je_m_authentifie_a_github
 "03_framework/steps/github".je_vais_sur_le_repo_de_test
 
 "03_framework/steps/github".je_tente_d_ouvrir_vs_code_online
@@ -10,3 +11,4 @@
 "03_framework/steps/vscode_online/manipuler_fichiers".je_supprimme_le_nouveau_fichier
 
 "03_framework/steps/system".je_quitte_les_applications
+EndTestCase "GitHub: vérifier peut accéder à VS Code online quand on est authentifié"
