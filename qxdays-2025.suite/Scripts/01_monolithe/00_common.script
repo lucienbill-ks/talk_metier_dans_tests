@@ -1,8 +1,0 @@
-﻿to ouvrir_chrome myUrl
-	TypeText windowsKey, "r"
-	wait 0.5
-	typeText "chrome.exe" && myUrl && "--start-maximized" && "--incognito", returnKey
-	wait 1
-	WaitFor 30.0, "01_monolithe/chrome_icone_chargement"
-	
-end ouvrir_chrome

@@ -1,0 +1,20 @@
+﻿log "Ouvrir le navigateur sur le site de test ..."
+set myUrl to "https://github.com/lucienbill/obsidian-daily-notes"
+"00_common".ouvrir_chrome myUrl
+waitfor 10, text:"lucienbill/obsidian-daily-notes", SearchRectangle: [0,93,RemoteScreenSize().x, 300]
+logSuccess "Ouvrir le navigateur sur le site de test : OK"
+
+Log "Tenter d'ouvrir VS Code"
+typeText "."
+wait 5
+
+Log "Vérifier que VS Code n'est pas ouvert ..."
+waitfor 10, text:"github.com/lucienbill/obsidian-daily-notes", SearchRectangle: [0,0,RemoteScreenSize().x, 93]
+waitfor 10, text:"lucienbill/obsidian-daily-notes", SearchRectangle: [0,93,RemoteScreenSize().x, 300]
+
+LogSuccess "Vérifier que VS Code n'est pas ouvert : OK"
+
+log "Quitter le navigateur ..."
+typeText altKey, f4
+WaitForNotFound 15, "chrome_icone_chargement"
+logSuccess "Quitter le navigateur : OK"

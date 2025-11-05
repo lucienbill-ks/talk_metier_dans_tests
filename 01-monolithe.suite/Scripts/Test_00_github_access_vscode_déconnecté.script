@@ -1,0 +1,19 @@
+﻿// Ouvrir le navigateur sur le site de test
+set myUrl to "https://github.com/lucienbill/obsidian-daily-notes"
+TypeText windowsKey, "r"
+wait 0.5
+typeText "chrome.exe" && myUrl && "--start-maximized" && "--incognito", returnKey
+WaitFor 30.0, "chrome_icone_chargement"
+waitfor 10, text:"lucienbill/obsidian-daily-notes", IgnoreSpaces:YES, SearchRectangle: [0,93,RemoteScreenSize().x, 300]
+
+// Tenter d'ouvrir VS Code
+typeText "."
+wait 5
+
+// Vérifier que VS Code n'est pas ouvert
+waitfor 10, text:"github.com/lucienbill/obsidian-daily-notes", SearchRectangle: [0,0,RemoteScreenSize().x, 93]
+waitfor 10, text:"lucienbill/obsidian-daily-notes", SearchRectangle: [0,93,RemoteScreenSize().x, 300], IgnoreSpaces:YES
+
+// Quitter le navigateur
+typeText altKey, f4
+WaitForNotFound 15, "chrome_icone_chargement"

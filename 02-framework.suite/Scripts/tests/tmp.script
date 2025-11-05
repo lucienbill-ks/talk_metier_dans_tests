@@ -1,0 +1,4 @@
+﻿run "tests/Test_01_github_access_vscode_déconnecté"
+set isOK to ImageFound(text:"ce text n'est pas présent", waitFor:0)
+assert isOK, "controle !"
+run "tests/Test_02_github_access_vscode_connecté"

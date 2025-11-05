@@ -1,0 +1,4 @@
+﻿set the sendShiftForCaps to no // for my azerty keyboard
+set the ScriptLogging to yes
+
+wait 2 //DEBUG, for the demo
