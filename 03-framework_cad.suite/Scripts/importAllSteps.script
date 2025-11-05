@@ -1,0 +1,30 @@
+﻿params scriptDirPath:empty
+
+// Ce script importe tout les "steps"
+// Les sous-dossiers sont gérés
+
+if scriptDirPath is empty
+	set scriptDirPath to the resolvedfilePath of ( ResourcePath() & "/../Scripts/steps")
+end if
+
+set listOfStepFiles to files of scriptDirPath
+set listOfSubfolders to the folders of scriptDirPath
+
+Repeat with each item myFile of listOfStepFiles
+	importFunctionsOfFile scriptDirPath & "/" & myFile
+End repeat
+
+Repeat with each item mySubfolder of listOfSubfolders
+	run importAllSteps scriptDirPath & "/" & mySubfolder
+End repeat
+
+
+
+to importFunctionsOfFile myFile
+	Try
+		Start using myFile
+	Catch theException
+		
+		throw "Impossible d'importer les fonctions", !"Le fichier '[[myFile]]' n'est pas reconnu ou n'existe pas"
+	End try
+end importFunctionsOfFile

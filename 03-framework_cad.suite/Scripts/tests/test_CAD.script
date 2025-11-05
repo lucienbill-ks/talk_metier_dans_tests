@@ -1,0 +1,384 @@
+﻿BeginTestCase "Create a new part in Nx"
+launch_NX
+create_new_part "tmp_part", "C:\CAD"
+orientView "Top"
+createNewSketch
+drawARectangle
+extrudeRectangle
+measureExtrusion
+cutCircleIntoThePiece
+updateDiameterOfCircle
+saveThePart
+EndTestCase "Create a new part in Nx"
+
+BeginTestCase "Close the part, open it again"
+Click text:"File", waitFor:0, SearchRectangle: nxZones("topMenu")
+click text:"Close", waitfor:4
+click text:"Closes all parts and keeps the session running.", waitfor:4
+set isOK to false
+repeat 10 times
+	if ImageFound(text:"tmp_part.prt", waitFor:0,SearchRectangle:nxZones("topTabs")) is false then
+		set isOK to true
+		exit repeat
+	end if
+	wait 3
+end repeat
+
+if isOK then
+	LogSuccess "successfully closed the file"
+else
+	Throw "Failed to close the file", "the file was not closed within 30 seconds"
+end if
+log 
+
+selectActionFromTopRibbon "Open"
+wait 0.5
+WaitFor 10, text:"New folder"
+click FoundImageLocation() + [228, -45]
+TypeText controlKey, "a"
+typeText "C:\CAD", returnKey
+DoubleClick text:"tmp_part", waitfor:10
+wait 3
+WaitFor 0, "CAD/myFirstPart_version3"
+LogSuccess "Part sucessfully re-opened"
+
+Click text:"File", waitFor:0, SearchRectangle: nxZones("topMenu")
+click text:"Close", waitfor:4
+click text:"Closes all parts and keeps the session running.", waitfor:4
+
+EndTestCase "Close the part, open it again"
+
+// Quit the app
+TypeText altKey, f4
+// Todo : attendre que l'appli soit vraiment fermée
+
+
+// -------------------------------------
+
+to launch_NX
+	log "Launch NX..."
+	typeText windowsKey, "r"
+	wait 0.5 // short wait, just in case
+	typeText "C:\Users\lucibill\OneDrive - Keysight Technologies\Desktop\NX-Native-2306.lnk", returnkey
+	set textOK to "K:\ drive exists"
+	set isOK to false
+	repeat 30 times
+		set errorText to "Warning: No K:\ drive, cannot update NXcustom folder."
+		if ImageFound(text:errorText, waitFor:0) then
+			Throw "Cannot Launch NX", "error is '" & errorText &"' ; please check that the VPN is active and that the K:\ drive is properly mapped on the machine"
+		end if
+		
+		if ImageFound(text:textOK, waitFor:0) then
+			set isOK to true
+			exit repeat
+		end if
+		wait 1
+	end repeat
+	if isOK equals false then
+		Throw "Failed to Launch NX", "Timed out waiting for the text '" & textOK &"' to appear"
+	end if
+	wait 20
+	WaitFor 30.0, "CAD/SIEMENS-logo"
+	
+	// make it full screen if necessary
+	if FoundImageLocation().y is greater than 20 then
+		typeText windowsKey, uparrow
+	end if
+	LogSuccess "Launch NX: OK"
+end launch_NX
+
+to create_new_part with part_name, part_folder
+	if part_name is empty then Throw "InvalidParameter", "The parameter 'part_name' must not be empty"
+	if part_folder is empty then Throw "InvalidParameter", "The parameter 'part_folder' must not be empty"
+	log "Create a new part..."
+	if part_folder ends with "\" or part_folder ends with "/" then
+		delete the last character of part_folder
+	end if
+	
+	log "First, delete the file if it already exists"
+	set mycmd to <<cmd /k del /S C:\CAD\* /f /q">>  
+	typeText windowsKey, "r"
+	wait 0.5
+	typeText mycmd, returnKey
+	wait 2
+	typeText "exit", returnKey
+	
+	
+	
+	log "Open and fill the dialog to create a new part..."
+	selectActionFromTopRibbon "New"
+	wait 1
+	waitfor 20, text:"New File Name"
+	set ir to FoundImageInfo().imageRectangle
+	set TL to ir.bottomLeft + [-25, 00]
+	set BR to ir.bottomRight + [+100, +300]
+
+	wait 0.5
+	
+	waitfor 2, text:"Name", waitFor:10, SearchRectangle:[TL,BR]
+	doubleclick FoundImageInfo().imageRectangle.centerRight + [100, 0]
+	wait 0.5
+	typeText part_name
+	
+	waitfor 2, text:"Folder", waitFor:10, SearchRectangle:[TL,BR]
+	doubleclick FoundImageInfo().imageRectangle.centerRight + [100, 0]
+	wait 0.5
+	typeText part_folder
+	
+	Click text:"OK", waitFor:4, SearchRectangle:[FoundImageLocation(), RemoteScreenSize()]
+	logSuccess "Open and fill the dialog to create a new part: OK"
+	
+	log "waiting for the part to be opened and ready to be interacted with"
+	wait 2
+	WaitFor 30, text:part_name & ".prt", SearchRectangle:nxZones("topTabs")
+	
+	log "set-up a white background"
+	set TL to FoundImageLocation() + [0, 150]
+	set BR to TL + [600, 600]
+	RightClick (TL)
+	wait 0.5
+	Click text:"Backgroud", waitFor:5, SearchRectangle:[TL,BR], ValidWords:"*"
+	wait 0.5
+	Click text:"White Backgroud", waitFor:5, SearchRectangle:[TL,BR], ValidWords:"*"
+
+	wait 1
+	log "Wait for the coordinates widget to appear"
+	WaitFor 30.0, "CAD/coordinates_widget/coordinates_widget_default"
+	logSuccess "Create a new part: OK"	
+end create_new_part
+
+
+to orientView with selectedView, dontControl:false
+	set ValidChoices to ["Trimetric", "Isometric", "Top", "Front", "Right", "Back", "Bottom", "Left", "Custom Views..."]
+	if ValidChoices does not contain selectedView then
+		Throw "InvalidParameter", "The parameter selectedView must be one of " && ValidChoices && ", received value was '" & selectedView &"'"
+	end if
+	log "orient view to" && selectedView & "..."
+	
+	set startPoint to  [500, 500]
+	RightClick startPoint
+	set BR to startPoint + [600, 600]
+	wait 0.5
+	Click text:"Orient View", waitFor:5, SearchRectangle:[startPoint,BR], ValidWords:"*"
+	wait 0.5
+	Click text:selectedView, waitFor:5, SearchRectangle:[startPoint,BR], ValidWords:"*"
+	wait 1
+	
+	if dontControl is false then
+		WaitFor 5,  "CAD/coordinates_widget/coordinates_widget_" & selectedView & "_view"
+	end if
+	
+	
+	LogSuccess "orient view to" && selectedView & ": OK"
+end orientView
+
+
+to selectActionFromTopRibbon with action
+	if action is empty then Throw "InvalidParameter", "The parameter 'action' must not be empty"
+	log "Select action" && action && "from the top ribbon"
+	set zone to nxZones("actionRibbonTop")
+	Click text:action, waitFor: 4, SearchRectangle: zone	
+end selectActionFromTopRibbon
+
+to nxZones with myZone
+	set zones to {
+		"actionRibbonTop":[0,55,1919,144],
+		"mainZone":[332,196,1880,1012],
+		"topTabs":[0,0,1919,344],
+		"topMenu":[0,31,1920,52]
+	}
+	
+	if zones.(myZone) is empty then
+		Throw "UnknownZone", "The zone '" & myZone &"' is not defined in the list of custom screen zones"
+	end if
+	
+	return zones.(myZone)
+end nxZones
+
+to createNewSketch
+	log "create a new Sketch..."
+	selectActionFromTopRibbon "Sketch"
+	wait 1
+	WaitFor 30, text:"Create Sketch"
+	set TL to FoundImageLocation() + [0, 150]
+	set BR to TL + [300, 300]
+	Click text:"OK", waitFor:5, SearchRectangle:[TL,BR]
+	logSuccess "create a new Sketch: OK"
+end createNewSketch
+
+to drawARectangle
+	log "draw a rectangle..."
+	selectActionFromTopRibbon "Rectangle"
+	wait 0.5
+	Click {Image:"CAD/sketch_center", WaitFor:4}
+	wait 0.5
+	click FoundImageLocation() + [400,-200]
+	wait 0.5
+	selectActionFromTopRibbon "Finish"
+	logSuccess "draw a rectangle: OK"
+end drawARectangle
+
+to extrudeRectangle
+	log "extrude it 42 mm..."
+	selectActionFromTopRibbon "Extrude"
+	wait 1
+	// Between "Limits" and "Boolean", find the End Distance and set it to 42 mm
+	WaitFor 4, text:"Limits", SearchRectangle: nxZones("mainZone")
+	set TL to FoundImageInfo().imageRectangle.bottomLeft + [-50, 0]
+	WaitFor 4, text:"Boolean", SearchRectangle: nxZones("mainZone")
+	set BR to FoundImageInfo().imageRectangle.topRight + [50, 0]
+
+	set allInstancesOfDistance to EveryImageRectangle(text:"Distance", SearchRectangle:[TL,BR])
+	set repere to (the last item of allInstancesOfDistance).centerRight + [150, 0]
+	doubleClick repere
+	typeText "42 "
+	WaitFor 4, text:"42", SearchRectangle:[repere + [-100,-25], repere + [50, 25]]
+	Click text:"OK", SearchRectangle: nxZones("mainZone"), waitfor:2
+	LogSuccess "extrude it 42 mm: OK"
+end extrudeRectangle
+
+to measureExtrusion
+	Log "measure the extrusion..."
+	orientView "Isometric", true
+	wait 1
+	WaitFor 8.0, "CAD/myFirstPart"
+	Click text:"Analysis", waitFor:0, SearchRectangle: nxZones("topMenu")
+	selectActionFromTopRibbon "Measure"
+	wait 1
+	Click (Image:"CAD/myFirstPart_segmentToMeasure", WaitFor:0)
+	
+	// Find the measure
+	WaitFor 4, text:"42.0000", SearchRectangle: nxZones("mainZone")
+	set y_pos_of_lenght_lim_min to FoundImageLocation().y - 10
+	set y_pos_of_lenght_lim_max to FoundImageLocation().y + 10
+	set ir to FoundImageInfo().imageRectangle
+	set TL to ir.topLeft + [-200, -25]
+	set BR to ir.bottomLeft + [ 0, 25]
+
+	// Verify that the value found correspond to the Length
+	WaitFor 0, text:"Length", searchRectangle:[TL, BR]
+	if FoundImageLocation().y is between y_pos_of_lenght_lim_min and y_pos_of_lenght_lim_max then
+		logSuccess "measurement is length"
+	else
+		logError "measure the extrusion: FAIL, please check the screenshot"
+	end if
+	
+	Click text:"Cancel", SearchRectangle: nxZones("mainZone"), waitfor:0
+	
+	logSuccess "measure the extrusion: OK"
+end measureExtrusion
+
+to cutCircleIntoThePiece
+
+	log "### Add a hole, that has a specific diameter... ###"
+	// TODO : add a hole measure it, modify diameter, measure again
+	log "Start a new Sketch on the top plane of the part..."
+	waitfor 4, imageName:"CAD/myFirstPart_segmentToMeasure"
+	set repere to FoundImageLocation() + [+0, -150]
+
+	Click text:"Home", waitFor:0, SearchRectangle: nxZones("topMenu")
+	selectActionFromTopRibbon "Sketch"
+	click repere
+	// Check that the top plane of the extrusion has been selected
+	WaitFor 8.0, "CAD/myFirstPart_skecth_topPlaneSelected"
+	Click text:"OK", SearchRectangle: nxZones("mainZone"), waitfor:2
+	LogSuccess "Start a new Sketch on the top plane of the part: OK"
+	
+	log "Drawing the circle..."
+	wait 2 // Animation
+	selectActionFromTopRibbon "Circle"
+	Click (Image:"CAD/sketch_center_topPlaneOfFirstPart", WaitFor:10)
+	set repere to FoundImageLocation() + [200, -200]
+	Click repere
+	LogSuccess "Drawing the circle: OK"
+	
+	log "Adding a specific diameter..."
+	typeText escapeKey
+	Click repere
+	Click (Image:"CAD/phi_diameter", WaitFor:4)
+	wait 1
+	typeText "55", returnKey
+	WaitFor 5, text:"Scale Sketch On First Dimension", SearchRectangle: nxZones("mainZone")
+	typeText returnKey
+	selectActionFromTopRibbon "Finish"
+	wait 2 // Animation
+	WaitFor 8.0, "CAD/myFirstPart_withCircleOnTop"
+	
+	
+	LogSuccess "Adding a specific diameter: OK"
+	
+	log "Subtracting matter to the part..." // It's actually an extrusion
+	selectActionFromTopRibbon "Extrude"
+	WaitFor 4, text:"Limits", SearchRectangle: nxZones("mainZone")
+	set TL to FoundImageInfo().imageRectangle.bottomLeft + [-50, 0]
+	WaitFor 4, text:"Boolean", SearchRectangle: nxZones("mainZone")
+	set BR to FoundImageInfo().imageRectangle.topRight + [50, 0]
+
+	set allInstancesOfDistance to EveryImageRectangle(text:"Distance", SearchRectangle:[TL,BR])
+	set repere to (the last item of allInstancesOfDistance).centerRight + [150, 0]
+	doubleClick repere
+	typeText "-42 "
+	WaitFor 4, text:"-42", SearchRectangle:[repere + [-100,-25], repere + [50, 25]]
+	Click text:"OK", SearchRectangle: nxZones("mainZone"), waitfor:2
+	WaitFor 8.0, "CAD/myFirstPart_version2"
+	
+	LogSuccess "Subtracting matter to the part: OK"
+	LogSuccess "### Add a hole, that has a specific diameter: OK ###"
+end cutCircleIntoThePiece
+
+to updateDiameterOfCircle
+	log "Updating the diameter of the circle..."
+	//  TODO
+	RightClick (Image:"CAD/myFirstPart_portionOfCircle", WaitFor:8)
+	set TL to FoundImageLocation()
+	set BR to TL + [200, 600]
+	Click text:"Edit", SearchRectangle: [TL, BR], validWords:"*", waitfor:10
+	wait 3 // animation
+	DoubleClick {Image:"CAD/phi_diameter", WaitFor:10}
+	wait 1
+	typeText "40", returnKey
+	WaitFor 5, text:"Scale Sketch On First Dimension", SearchRectangle: nxZones("mainZone")
+	typeText returnKey
+	selectActionFromTopRibbon "Finish"
+	wait 3 // animation
+	WaitFor 10.0, "CAD/myFirstPart_version3"
+	LogSuccess "Updating the diameter of the circle: OK"
+	
+	log "Reading the new diameter..."
+	Click text:"Analysis", waitFor:0, SearchRectangle: nxZones("topMenu")
+	selectActionFromTopRibbon "Measure"
+	wait 1
+	Click (Image:"CAD/myFirstPart_portionOfCircle/myFirstPart_portionOfCircle_D40", WaitFor:10)
+	WaitFor 10, text:"radius", SearchRectangle: nxZones("mainZone")
+	set ir to FoundImageInfo().imageRectangle
+	set TL to ir.topRight + [0, -5]
+	set BR to ir.bottomRight + [300, 5]
+	waitfor 10, text:"20.0000", SearchRectangle:[TL,BR]
+	typeText escapeKey
+	logSuccess "Reading the new diameter: OK"
+	
+end updateDiameterOfCircle
+
+to saveThePart
+	log "saving the part..."
+	TypeText controlKey, "s"
+	
+	openPowerShell
+	typeText "ls C:/CAD/tmp_part.prt", returnKey
+	waitfor 10, text: "Length Name"
+	set ir to FoundImageInfo().imageRectangle
+	set TL to ir.bottomLeft + [0, 0]
+	set BR to ir.bottomRight + [300, 40]
+	waitfor 10, text:"tmp_part.pr", SearchRectangle:[TL,BR]
+	typeText "exit", returnKey
+	logSuccess "saving the part: OK"
+end saveThePart
+
+to openPowerShell
+	TypeText windowsKey, "r"
+	wait 0.5
+	typeText "powershell", returnKey
+	wait 1
+	WaitFor 10, text:"Windows PowerShell"
+	wait 1
+end openPowerShell
