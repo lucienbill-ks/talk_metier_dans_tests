@@ -29,7 +29,6 @@ if isOK then
 else
 	Throw "Failed to close the file", "the file was not closed within 30 seconds"
 end if
-log 
 
 selectActionFromTopRibbon "Open"
 wait 0.5
@@ -37,7 +36,8 @@ WaitFor 10, text:"New folder"
 click FoundImageLocation() + [228, -45]
 TypeText controlKey, "a"
 typeText "C:\CAD", returnKey
-DoubleClick text:"tmp_part", waitfor:10
+DoubleClick text:"tmp_part", waitfor:10, SearchRectangle:["CAD/popups/OpenFile/TL", "CAD/popups/OpenFile/BR"]
+Moveto [500,200] //Bouger la souris pour éviter qu'elle interfère
 wait 3
 WaitFor 0, "CAD/myFirstPart_version3"
 LogSuccess "Part sucessfully re-opened"
@@ -45,11 +45,13 @@ LogSuccess "Part sucessfully re-opened"
 Click text:"File", waitFor:0, SearchRectangle: nxZones("topMenu")
 click text:"Close", waitfor:4
 click text:"Closes all parts and keeps the session running.", waitfor:4
-
+WaitForNotFound 15, "CAD/myFirstPart_version3"
 EndTestCase "Close the part, open it again"
 
 // Quit the app
 TypeText altKey, f4
+WaitForNotFound 15, "CAD/SIEMENS-logo"
+
 // Todo : attendre que l'appli soit vraiment fermée
 
 
@@ -96,12 +98,15 @@ to create_new_part with part_name, part_folder
 	end if
 	
 	log "First, delete the file if it already exists"
-	set mycmd to <<cmd /k del /S C:\CAD\* /f /q">>  
+	set mycmd to "cmd /k del /S " & part_folder & "\" & part_name & "* /f /q"
 	typeText windowsKey, "r"
 	wait 0.5
 	typeText mycmd, returnKey
-	wait 2
+	WaitFor 10.0, "System/CMD_prompt_title"
+	wait 0.5
 	typeText "exit", returnKey
+	WaitForNotFound 5, "System/CMD_prompt_title"
+	
 	
 	
 	
