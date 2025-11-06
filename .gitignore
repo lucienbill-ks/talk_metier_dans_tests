@@ -1,5 +1,4 @@
+*.suite/SearchObjects/
 .DS_Store
 .timestamp
 *.suite/Results/
-*.suite/SearchObjects/
-/Results/
