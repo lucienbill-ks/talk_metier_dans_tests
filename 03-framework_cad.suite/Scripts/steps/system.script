@@ -1,0 +1,33 @@
+to launch_NX
+	log "Launch NX..."
+	typeText windowsKey, "r"
+	wait 0.5 // short wait, just in case
+	typeText "C:\Users\lucibill\OneDrive - Keysight Technologies\Desktop\NX-Native-2306.lnk", returnkey
+	set textOK to "K:\ drive exists"
+	set isOK to false
+	repeat 30 times
+		set errorText to "Warning: No K:\ drive, cannot update NXcustom folder."
+		if ImageFound(text:errorText, waitFor:0) then
+			Throw "Cannot Launch NX", "error is '" & errorText &"' ; please check that the VPN is active and that the K:\ drive is properly mapped on the machine"
+		end if
+		
+		if ImageFound(text:textOK, waitFor:0) then
+			set isOK to true
+			exit repeat
+		end if
+		wait 1
+	end repeat
+	if isOK equals false then
+		Throw "Failed to Launch NX", "Timed out waiting for the text '" & textOK &"' to appear"
+	end if
+	wait 20
+	WaitFor 30.0, "CAD/SIEMENS-logo"
+	
+	// make it full screen if necessary
+	if FoundImageLocation().y is greater than 20 then
+		typeText windowsKey, uparrow
+	end if
+
+    wait 5 // it loads a few things
+    LogSuccess "Launch NX: OK"  
+end launch_NX

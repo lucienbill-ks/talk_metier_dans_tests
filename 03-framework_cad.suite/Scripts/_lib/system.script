@@ -1,0 +1,8 @@
+to openPowerShell
+	TypeText windowsKey, "r"
+	wait 0.5
+	typeText "powershell", returnKey
+	wait 1
+	WaitFor 10, text:"Windows PowerShell"
+	wait 1
+end openPowerShell

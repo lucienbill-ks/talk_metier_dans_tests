@@ -1,0 +1,119 @@
+﻿to create_part_x_in_folder_y with part_name:empty, part_folder:empty
+	if part_name is empty then Throw "InvalidParameter", "The parameter 'part_name' must not be empty"
+	if part_folder is empty then Throw "InvalidParameter", "The parameter 'part_folder' must not be empty"
+	log "Create a new part..."
+	if part_folder ends with "\" or part_folder ends with "/" then
+		delete the last character of part_folder
+	end if
+	
+	log "First, delete the file if it already exists"
+	set mycmd to "cmd /k del /S " & part_folder & "\" & part_name & "* /f /q"
+	typeText windowsKey, "r"
+	wait 0.5
+	waitfor 5, text: "Type the name of a program, folder, document"
+	typeText mycmd, returnKey
+	WaitFor 10.0, "System/CMD_prompt_title"
+	wait 0.5
+	typeText "exit", returnKey
+	WaitForNotFound 5, "System/CMD_prompt_title"
+	
+	
+	
+	
+	log "Open and fill the dialog to create a new part..."
+	selectActionFromTopRibbon "New"
+	wait 1
+	waitfor 20, text:"New File Name"
+	set ir to FoundImageInfo().imageRectangle
+	set TL to ir.bottomLeft + [-25, 00]
+	set BR to ir.bottomRight + [+100, +300]
+
+	wait 0.5
+	
+	waitfor 2, text:"Name", waitFor:10, SearchRectangle:[TL,BR]
+	doubleclick FoundImageInfo().imageRectangle.centerRight + [100, 0]
+	wait 0.5
+	typeText part_name
+	
+	waitfor 2, text:"Folder", waitFor:10, SearchRectangle:[TL,BR]
+	doubleclick FoundImageInfo().imageRectangle.centerRight + [100, 0]
+	wait 0.5
+	typeText part_folder
+	
+	Click text:"OK", waitFor:4, SearchRectangle:[FoundImageLocation(), RemoteScreenSize()]
+	logSuccess "Open and fill the dialog to create a new part: OK"
+	
+	log "waiting for the part to be opened and ready to be interacted with"
+	wait 2
+	WaitFor 30, text:part_name & ".prt", SearchRectangle:"_lib\NX\utils".nxZones("topTabs")
+	
+	log "set-up a white background"
+	set TL to FoundImageLocation() + [0, 150]
+	set BR to TL + [600, 600]
+	RightClick (TL)
+	wait 0.5
+	Click text:"Backgroud", waitFor:5, SearchRectangle:[TL,BR], ValidWords:"*"
+	wait 0.5
+	Click text:"White Backgroud", waitFor:5, SearchRectangle:[TL,BR], ValidWords:"*"
+
+	wait 1
+	log "Wait for the coordinates widget to appear"
+	WaitFor 30.0, "CAD/coordinates_widget/coordinates_widget_default"
+	logSuccess "Create a new part: OK"	
+end create_part_x_in_folder_y
+
+to openPart_x_in_folder_y part_name:empty, part_folder:empty, refImage:"CAD/myFirstPart_version3"
+	if part_name is empty then Throw "InvalidParameter", "The parameter 'part_name' must not be empty"
+	if part_folder is empty then Throw "InvalidParameter", "The parameter 'part_folder' must not be empty"
+
+	selectActionFromTopRibbon "Open"
+	wait 0.5
+	WaitFor 10, text:"New folder"
+	click FoundImageLocation() + [228, -45]
+	TypeText controlKey, "a"
+	typeText part_folder, returnKey
+	DoubleClick text:part_name, waitfor:10, SearchRectangle:["CAD/popups/OpenFile/TL", "CAD/popups/OpenFile/BR"]
+	Moveto [500,200] //Bouger la souris pour éviter qu'elle interfère
+	wait 3
+	WaitFor 0, refImage
+	LogSuccess "Part sucessfully re-opened"
+end openPart_x_in_folder_y
+
+
+to orientView with selectedView, dontControl:false
+	set ValidChoices to ["Trimetric", "Isometric", "Top", "Front", "Right", "Back", "Bottom", "Left", "Custom Views..."]
+	if ValidChoices does not contain selectedView then
+		Throw "InvalidParameter", "The parameter selectedView must be one of " && ValidChoices && ", received value was '" & selectedView &"'"
+	end if
+	log "orient view to" && selectedView & "..."
+	
+	set startPoint to  [500, 500]
+	RightClick startPoint
+	set BR to startPoint + [600, 600]
+	wait 0.5
+	Click text:"Orient View", waitFor:5, SearchRectangle:[startPoint,BR], ValidWords:"*"
+	wait 0.5
+	Click text:selectedView, waitFor:5, SearchRectangle:[startPoint,BR], ValidWords:"*"
+	wait 1
+	
+	if dontControl is false then
+		WaitFor 5,  "CAD/coordinates_widget/coordinates_widget_" & selectedView & "_view"
+	end if
+	
+	
+	LogSuccess "orient view to" && selectedView & ": OK"
+end orientView
+
+to selectActionFromTopRibbon with action
+	if action is empty then Throw "InvalidParameter", "The parameter 'action' must not be empty"
+	log "Select action" && action && "from the top ribbon"
+	set zone to "_lib/NX/utils".nxZones("actionRibbonTop")
+	Click text:action, waitFor: 4, SearchRectangle: zone	
+end selectActionFromTopRibbon
+
+to quit_NX
+	log "quit NX..."
+	TypeText altKey, f4
+	WaitForNotFound 15, "CAD/SIEMENS-logo"
+	logSuccess "quit NX OK..."
+end quit_NX

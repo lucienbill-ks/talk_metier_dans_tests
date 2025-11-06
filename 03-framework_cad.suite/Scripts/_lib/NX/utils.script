@@ -1,0 +1,14 @@
+to nxZones with myZone
+	set zones to {
+		"actionRibbonTop":[0,55,1919,144],
+		"mainZone":[332,196,1880,1012],
+		"topTabs":[0,0,1919,344],
+		"topMenu":[0,31,1920,52]
+	}
+	
+	if zones.(myZone) is empty then
+		Throw "UnknownZone", "The zone '" & myZone &"' is not defined in the list of custom screen zones"
+	end if
+	
+	return zones.(myZone)
+end nxZones
