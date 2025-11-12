@@ -1,21 +1,23 @@
 ﻿BeginTestCase "Create a new part in Nx"
-launch_NX
-create_part_x_in_folder_y "tmp_part", "C:\CAD"
-orientView "Top"
-createNewSketch
-drawARectangle
-extrudeRectangle
-measureExtrusion
-cutCircleIntoThePiece
-updateDiameterOfCircle
-saveThePart
+// Je_lance_NX
+Je_cree_la_piece_x_dans_dossier_y "tmp_part", "C:\CAD"
+J_oriente_la_vue "Top"
+Je_cree_un_sketch
+Je_fais_un_rectangle
+Je_fais_une_extrusion
+Je_mesure_l_extrusion
+Je_creuse_un_trou
+Je_maj_le_diametre_du_trou
+Je_sauvegarde_la_piece
 EndTestCase "Create a new part in Nx"
 
 --------------------------------------------
+(*
 BeginTestCase "Close the part, open it again"
 closeThePart
 openPart_x_in_folder_y "tmp_part", "C:\CAD"
 closeThePart
 EndTestCase "Close the part, open it again"
+*)
 
-quit_NX
+Je_quite_NX

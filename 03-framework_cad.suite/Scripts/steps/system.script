@@ -1,11 +1,11 @@
-to launch_NX
-	log "Launch NX..."
+to Je_lance_NX
+	logfct
 	typeText windowsKey, "r"
 	wait 0.5 // short wait, just in case
 	typeText "C:\Users\lucibill\OneDrive - Keysight Technologies\Desktop\NX-Native-2306.lnk", returnkey
 	set textOK to "K:\ drive exists"
 	set isOK to false
-	repeat 30 times
+	repeat 30 times // FIXME: I know how to do simpler than a loop now
 		set errorText to "Warning: No K:\ drive, cannot update NXcustom folder."
 		if ImageFound(text:errorText, waitFor:0) then
 			Throw "Cannot Launch NX", "error is '" & errorText &"' ; please check that the VPN is active and that the K:\ drive is properly mapped on the machine"
@@ -29,5 +29,5 @@ to launch_NX
 	end if
 
     wait 5 // it loads a few things
-    LogSuccess "Launch NX: OK"  
-end launch_NX
+    logfct 
+end Je_lance_NX

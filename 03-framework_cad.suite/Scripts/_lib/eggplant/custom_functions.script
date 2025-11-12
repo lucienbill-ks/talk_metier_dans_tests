@@ -53,9 +53,6 @@ to logFct
 	// Are we entering or leaving the function?
 	set is_entering_function to (the last item of fct_stack is not current_function)
 	
-	
-	
-	
 	if is_entering_function then
 		set param_str to the params
 		delete param(0) from param_str
@@ -167,7 +164,7 @@ to ImageRectangle myparam
 	
 end ImageRectangle
 
-
+(*
 to Throw with theException, thereason
 	// This is a rewrite of the standard "Throw" function,
 	// but it writes addisional callstack information in the error message
@@ -196,6 +193,7 @@ to Throw with theException, thereason
 	
 	send throw theException, thereason to SenseTalk
 end Throw
+*)
 
 to ScrollWheelUp scrollAmount
 	send ScrollWheelUp scrollAmount to SenseTalk

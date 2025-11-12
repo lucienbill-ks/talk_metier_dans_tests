@@ -1,4 +1,4 @@
-to nxZones with myZone
+to nxZones with myZone:empty
 	set zones to {
 		"actionRibbonTop":[0,55,1919,144],
 		"mainZone":[332,196,1880,1012],
@@ -6,9 +6,20 @@ to nxZones with myZone
 		"topMenu":[0,31,1920,52]
 	}
 	
-	if zones.(myZone) is empty then
-		Throw "UnknownZone", "The zone '" & myZone &"' is not defined in the list of custom screen zones"
+	if myZone is not in the keys of zones
+		Throw "Unknown Zone", !"The zone '[[ myZone ]]' is not defined in the list of custom screen zones: [[the keys of zones]]"
 	end if
-	
+
 	return zones.(myZone)
 end nxZones
+
+to selectionnerAction_RubanHaut with action:empty
+	logfct action
+
+	if action is empty then Throw "InvalidParameter", "The parameter 'action' must not be empty"
+
+	set zone to "_lib/NX/utils".nxZones("actionRibbonTop")
+	Click text:action, waitFor: 4, SearchRectangle: zone
+	
+	logfct
+end selectionnerAction_RubanHaut

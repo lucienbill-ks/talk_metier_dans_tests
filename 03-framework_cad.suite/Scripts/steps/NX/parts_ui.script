@@ -1,29 +1,29 @@
-to createNewSketch
-	log "create a new Sketch..."
-	selectActionFromTopRibbon "Sketch"
+﻿to Je_cree_un_sketch
+	logfct
+	"_lib/NX/utils".selectionnerAction_RubanHaut "Sketch"
 	wait 1
 	WaitFor 30, text:"Create Sketch"
 	set TL to FoundImageLocation() + [0, 150]
 	set BR to TL + [300, 300]
 	Click text:"OK", waitFor:5, SearchRectangle:[TL,BR]
-	logSuccess "create a new Sketch: OK"
-end createNewSketch
+	logfct
+end Je_cree_un_sketch
 
-to drawARectangle
-	log "draw a rectangle..."
-	selectActionFromTopRibbon "Rectangle"
+to Je_fais_un_rectangle
+	logfct
+	"_lib/NX/utils".selectionnerAction_RubanHaut "Rectangle"
 	wait 0.5
 	Click {Image:"CAD/sketch_center", WaitFor:4}
 	wait 0.5
 	click FoundImageLocation() + [400,-200]
 	wait 0.5
-	selectActionFromTopRibbon "Finish"
-	logSuccess "draw a rectangle: OK"
-end drawARectangle
+	"_lib/NX/utils".selectionnerAction_RubanHaut "Finish"
+	logfct
+end Je_fais_un_rectangle
 
-to extrudeRectangle
-	log "extrude it 42 mm..."
-	selectActionFromTopRibbon "Extrude"
+to Je_fais_une_extrusion length:42
+	logfct length && "millimeters"
+	"_lib/NX/utils".selectionnerAction_RubanHaut "Extrude"
 	wait 1
 	// Between "Limits" and "Boolean", find the End Distance and set it to 42 mm
 	WaitFor 4, text:"Limits", SearchRectangle: "_lib\NX\utils".nxZones("mainZone")
@@ -34,24 +34,25 @@ to extrudeRectangle
 	set allInstancesOfDistance to EveryImageRectangle(text:"Distance", SearchRectangle:[TL,BR])
 	set repere to (the last item of allInstancesOfDistance).centerRight + [150, 0]
 	doubleClick repere
-	typeText "42 "
-	WaitFor 4, text:"42", SearchRectangle:[repere + [-100,-25], repere + [50, 25]]
+	typeText length & " "
+	WaitFor 4, text:length, SearchRectangle:[repere + [-100,-25], repere + [50, 25]]
 	Click text:"OK", SearchRectangle: "_lib\NX\utils".nxZones("mainZone"), waitfor:2
-	LogSuccess "extrude it 42 mm: OK"
-end extrudeRectangle
+	logfct
+end Je_fais_une_extrusion
 
-to measureExtrusion
-	Log "measure the extrusion..."
-	orientView "Isometric", true
+to Je_mesure_l_extrusion expected_length:42
+	logfct expected_length && "mm"
+	J_oriente_la_vue "Isometric", true
+	moveto [500, 500] // neutral point
 	wait 1
 	WaitFor 8.0, "CAD/myFirstPart"
 	Click text:"Analysis", waitFor:0, SearchRectangle: "_lib\NX\utils".nxZones("topMenu")
-	selectActionFromTopRibbon "Measure"
+	"_lib/NX/utils".selectionnerAction_RubanHaut "Measure"
 	wait 1
 	Click (Image:"CAD/myFirstPart_segmentToMeasure", WaitFor:0)
 	
 	// Find the measure
-	WaitFor 4, text:"42.0000", SearchRectangle: "_lib\NX\utils".nxZones("mainZone")
+	WaitFor 4, text:expected_length & ".0000", SearchRectangle: "_lib\NX\utils".nxZones("mainZone")
 	set y_pos_of_lenght_lim_min to FoundImageLocation().y - 10
 	set y_pos_of_lenght_lim_max to FoundImageLocation().y + 10
 	set ir to FoundImageInfo().imageRectangle
@@ -61,41 +62,42 @@ to measureExtrusion
 	// Verify that the value found correspond to the Length
 	WaitFor 0, text:"Length", searchRectangle:[TL, BR]
 	if FoundImageLocation().y is between y_pos_of_lenght_lim_min and y_pos_of_lenght_lim_max then
-		logSuccess "measurement is length"
+		logSuccess "Le type de mesure est bien 'longueur'"
 	else
 		logError "measure the extrusion: FAIL, please check the screenshot"
 	end if
+	// -> Use ASSERT instead
 	
 	Click text:"Cancel", SearchRectangle: "_lib\NX\utils".nxZones("mainZone"), waitfor:0
 	
-	logSuccess "measure the extrusion: OK"
-end measureExtrusion
+	logfct
+end Je_mesure_l_extrusion
 
-to cutCircleIntoThePiece
-
-	log "### Add a hole, that has a specific diameter... ###"
-	// TODO : add a hole measure it, modify diameter, measure again
-	log "Start a new Sketch on the top plane of the part..."
+to Je_creuse_un_trou mydepth:42
+	logfct  mydepth && "mm"
+	log "(creuser un trou avec un diamètre spécifique)"
+	
+	log "Créer un sketch sur la face supérieure de la pièce..."
 	waitfor 4, imageName:"CAD/myFirstPart_segmentToMeasure"
 	set repere to FoundImageLocation() + [+0, -150]
 
 	Click text:"Home", waitFor:0, SearchRectangle: "_lib\NX\utils".nxZones("topMenu")
-	selectActionFromTopRibbon "Sketch"
+	"_lib/NX/utils".selectionnerAction_RubanHaut "Sketch"
 	click repere
 	// Check that the top plane of the extrusion has been selected
 	WaitFor 8.0, "CAD/myFirstPart_skecth_topPlaneSelected"
 	Click text:"OK", SearchRectangle: "_lib\NX\utils".nxZones("mainZone"), waitfor:2
-	LogSuccess "Start a new Sketch on the top plane of the part: OK"
+	LogSuccess "Créer un sketch sur la face supérieure de la pièce : OK"
 	
-	log "Drawing the circle..."
+	log "Dessiner un cercle ..."
 	wait 2 // Animation
-	selectActionFromTopRibbon "Circle"
+	"_lib/NX/utils".selectionnerAction_RubanHaut "Circle"
 	Click (Image:"CAD/sketch_center_topPlaneOfFirstPart", WaitFor:10)
 	set repere to FoundImageLocation() + [200, -200]
 	Click repere
-	LogSuccess "Drawing the circle: OK"
+	LogSuccess "Dessiner un cercle : OK"
 	
-	log "Adding a specific diameter..."
+	log "Préciser le diamètre ..."
 	typeText escapeKey
 	Click repere
 	Click (Image:"CAD/phi_diameter", WaitFor:4)
@@ -103,15 +105,15 @@ to cutCircleIntoThePiece
 	typeText "55", returnKey
 	WaitFor 5, text:"Scale Sketch On First Dimension", SearchRectangle: "_lib\NX\utils".nxZones("mainZone")
 	typeText returnKey
-	selectActionFromTopRibbon "Finish"
+	"_lib/NX/utils".selectionnerAction_RubanHaut "Finish"
 	wait 2 // Animation
 	WaitFor 8.0, "CAD/myFirstPart_withCircleOnTop"
 	
 	
-	LogSuccess "Adding a specific diameter: OK"
+	LogSuccess "Préciser le diamètre : OK"
 	
-	log "Subtracting matter to the part..." // It's actually an extrusion
-	selectActionFromTopRibbon "Extrude"
+	log "Soustraire la matière à la pièce ..." // It's actually an extrusion
+	"_lib/NX/utils".selectionnerAction_RubanHaut "Extrude"
 	WaitFor 4, text:"Limits", SearchRectangle: "_lib\NX\utils".nxZones("mainZone")
 	set TL to FoundImageInfo().imageRectangle.bottomLeft + [-50, 0]
 	WaitFor 4, text:"Boolean", SearchRectangle: "_lib\NX\utils".nxZones("mainZone")
@@ -120,36 +122,37 @@ to cutCircleIntoThePiece
 	set allInstancesOfDistance to EveryImageRectangle(text:"Distance", SearchRectangle:[TL,BR])
 	set repere to (the last item of allInstancesOfDistance).centerRight + [150, 0]
 	doubleClick repere
-	typeText "-42 "
-	WaitFor 4, text:"-42", SearchRectangle:[repere + [-100,-25], repere + [50, 25]]
+	typeText "-" & mydepth & " "
+	WaitFor 4, text:mydepth, SearchRectangle:[repere + [-100,-25], repere + [50, 25]]
 	Click text:"OK", SearchRectangle: "_lib\NX\utils".nxZones("mainZone"), waitfor:2
 	WaitFor 8.0, "CAD/myFirstPart_version2"
 	
-	LogSuccess "Subtracting matter to the part: OK"
-	LogSuccess "### Add a hole, that has a specific diameter: OK ###"
-end cutCircleIntoThePiece
+	LogSuccess "Soustraire la matière à la pièce : OK"
+	logfct
+end Je_creuse_un_trou
 
-to updateDiameterOfCircle
-	log "Updating the diameter of the circle..."
-	//  TODO
+to Je_maj_le_diametre_du_trou
+	logfct
+	log "Mettre à jour le diamètre du cercle ..."
+	
 	RightClick (Image:"CAD/myFirstPart_portionOfCircle", WaitFor:8)
 	set TL to FoundImageLocation()
 	set BR to TL + [200, 600]
 	Click text:"Edit", SearchRectangle: [TL, BR], validWords:"*", waitfor:10
 	wait 3 // animation
 	DoubleClick {Image:"CAD/phi_diameter", WaitFor:10}
-	wait 1
+	wait 1 // animation
 	typeText "40", returnKey
 	WaitFor 5, text:"Scale Sketch On First Dimension", SearchRectangle: "_lib\NX\utils".nxZones("mainZone")
 	typeText returnKey
-	selectActionFromTopRibbon "Finish"
+	"_lib/NX/utils".selectionnerAction_RubanHaut "Finish"
 	wait 3 // animation
 	WaitFor 10.0, "CAD/myFirstPart_version3"
-	LogSuccess "Updating the diameter of the circle: OK"
+	LogSuccess "Mettre à jour le diamètre du cercle : OK"
 	
-	log "Reading the new diameter..."
+	log "Lire le nouveau ddiamètre ..."
 	Click text:"Analysis", waitFor:0, SearchRectangle: "_lib\NX\utils".nxZones("topMenu")
-	selectActionFromTopRibbon "Measure"
+	"_lib/NX/utils".selectionnerAction_RubanHaut "Measure"
 	wait 1
 	Click (Image:"CAD/myFirstPart_portionOfCircle/myFirstPart_portionOfCircle_D40", WaitFor:10)
 	WaitFor 10, text:"radius", SearchRectangle: "_lib\NX\utils".nxZones("mainZone")
@@ -158,48 +161,35 @@ to updateDiameterOfCircle
 	set BR to ir.bottomRight + [300, 5]
 	waitfor 10, text:"20.0000", SearchRectangle:[TL,BR]
 	typeText escapeKey
-	logSuccess "Reading the new diameter: OK"
-	
-end updateDiameterOfCircle
+	logSuccess "Lire le nouveau ddiamètre : OK"
+	logfct
+end Je_maj_le_diametre_du_trou
 
-to saveThePart
-	log "saving the part..."
+to Je_sauvegarde_la_piece
+	logfct
 	TypeText controlKey, "s"
 	
 	"_lib\system".openPowerShell
 	typeText "ls C:/CAD/tmp_part.prt", returnKey
+	wait 0.5 // animation
 	waitfor 10, text: "Length Name"
 	set ir to FoundImageInfo().imageRectangle
 	set TL to ir.bottomLeft + [0, 0]
 	set BR to ir.bottomRight + [300, 40]
 	waitfor 10, text:"tmp_part.pr", SearchRectangle:[TL,BR]
 	typeText "exit", returnKey
-	logSuccess "saving the part: OK"
-end saveThePart
+	logfct
+end Je_sauvegarde_la_piece
 
 to closeThePart
-    log "Closing the file..."
-
-    Click text:"File", waitFor:0, SearchRectangle: "_lib\NX\utils".nxZones("topMenu")
-    click text:"Close", waitfor:4
-    click text:"Closes all parts and keeps the session running.", waitfor:4
-    set isOK to false
-
-    //FIXME: this loop is old code, I can use "WaitForNotFound" instead
-    repeat 10 times
-        // FIXME: this is specific to "tmp_part.prt". OK for a demo, bad for real code
-
-        if ImageFound(text:"tmp_part.prt", waitFor:0,SearchRectangle:"_lib\NX\utils".nxZones("topTabs")) is false then
-            set isOK to true
-            exit repeat
-        end if
-        wait 3
-    end repeat
-    WaitForNotFound 15, "CAD/myFirstPart_version3"
-
-    if isOK then
-        LogSuccess "Closing the file: OK"
-    else
-        Throw "Failed to close the file", "the file was not closed within 30 seconds"
-    end if
+	logfct
+	
+	Click text:"File", waitFor:0, SearchRectangle: "_lib\NX\utils".nxZones("topMenu")
+	click text:"Close", waitfor:4
+	click text:"Closes all parts and keeps the session running.", waitfor:4
+	
+	WaitForNotFound 15, "CAD/myFirstPart_version3"
+	WaitForNotFound 15, text:"tmp_part.prt", waitFor:0,SearchRectangle:"_lib\NX\utils".nxZones("topTabs")
+	
+	logfct
 end closeThePart
