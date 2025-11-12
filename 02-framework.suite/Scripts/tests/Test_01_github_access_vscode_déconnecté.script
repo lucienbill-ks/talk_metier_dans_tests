@@ -1,9 +1,9 @@
 ﻿BeginTestCase "GitHub: vérifier qu'on ne peut pas accéder à VS Code online quand on n'est pas authentifié"
-"steps/github".je_vais_sur_le_repo_de_test
+je_vais_sur_le_repo_de_test
 
-"steps/github".je_tente_d_ouvrir_vs_code_online
+je_tente_d_ouvrir_vs_code_online
 
-"steps/vscode_online/etat_app".je_verifie_que_vscode_online_n_est_pas_ouvert
+je_verifie_que_vscode_online_n_est_pas_ouvert
 
-"steps/system".je_quitte_les_applications
+je_quitte_les_applications
 EndTestCase "GitHub: vérifier qu'on ne peut pas accéder à VS Code online quand on n'est pas authentifié"

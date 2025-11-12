@@ -10,7 +10,5 @@
 "steps/vscode_online/manipuler_fichiers".j_ecris_dans_le_nouveau_fichier_dans_vscode
 "steps/vscode_online/manipuler_fichiers".je_supprimme_le_nouveau_fichier_dans_vscode
 
-// TODO : filmer l'auto complétion. je pars d'un commentaire, je montre le découpage métier (file explorer), puis je tape l'instruction
-
 "steps/system".je_quitte_les_applications
 EndTestCase "GitHub: vérifier peut accéder à VS Code online quand on est authentifié"

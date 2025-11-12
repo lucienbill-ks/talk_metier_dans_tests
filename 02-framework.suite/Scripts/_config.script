@@ -2,5 +2,6 @@
 set the ScriptLogging to yes
 
 start using "_lib/eggplant/custom_functions"
+run importAllSteps
 
 wait 2 //DEBUG, for the demo

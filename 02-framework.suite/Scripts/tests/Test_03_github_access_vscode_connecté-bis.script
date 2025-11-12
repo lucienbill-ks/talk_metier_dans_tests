@@ -1,8 +1,4 @@
 ﻿BeginTestCase "GitHub: vérifier peut accéder à VS Code online quand on est authentifié"
-## import
-run importAllSteps // On peut déplacer cette instruction dans un "before all" caché
-
-## test
 je_m_authentifie_a_github
 je_vais_sur_le_repo_de_test
 
