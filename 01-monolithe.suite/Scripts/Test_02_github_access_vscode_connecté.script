@@ -1,6 +1,11 @@
 ﻿Log "Se connecter à Github ..."
 set myUrl to "https://github.com/login"
-"00_common".ouvrir_chrome myUrl
+TypeText windowsKey, "r"
+wait 0.5
+typeText "chrome.exe" && myUrl && "--start-maximized" && "--incognito", returnKey
+WaitFor 30.0, "chrome_icone_chargement"
+logSuccess "Ouvrir le navigateur: OK"
+
 Click text:"Username or email address"
 
 Log "Ouvrir Keepass, l'utiliser pour taper les credentials ..."

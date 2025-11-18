@@ -1,7 +1,10 @@
 ﻿log "Ouvrir le navigateur sur le site de test ..."
 set myUrl to "https://github.com/lucienbill/obsidian-daily-notes"
-"00_common".ouvrir_chrome myUrl
-waitfor 10, text:"lucienbill/obsidian-daily-notes", SearchRectangle: [0,93,RemoteScreenSize().x, 300]
+TypeText windowsKey, "r"
+wait 0.5
+typeText "chrome.exe" && myUrl && "--start-maximized" && "--incognito", returnKey
+WaitFor 30.0, "chrome_icone_chargement"
+waitfor 10, text:"lucienbill/obsidian-daily-notes", IgnoreSpaces:YES, SearchRectangle: [0,93,RemoteScreenSize().x, 300]
 logSuccess "Ouvrir le navigateur sur le site de test : OK"
 
 Log "Tenter d'ouvrir VS Code"

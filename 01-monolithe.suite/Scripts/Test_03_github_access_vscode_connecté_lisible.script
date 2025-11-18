@@ -1,0 +1,161 @@
+﻿(*
+Note : a défaut d'être vraiment factorisé (les fonctions ne sont pas
+facilement réutilisables par d'autres test), la lecture du test
+est déjà facilitée par l'existence des fonctions
+*)
+
+je_m_authentifie_a_github
+je_vais_sur_le_repo_de_test
+
+j_ouvre_vs_code_online
+
+je_cree_un_nouveau_fichier_dans_vscode 
+j_ecris_dans_le_nouveau_fichier_dans_vscode
+je_supprimme_le_nouveau_fichier_dans_vscode
+
+je_quitte_les_applications
+
+
+---------------------------------------
+-------------- FONCTIONS --------------
+---------------------------------------
+
+to je_m_authentifie_a_github	
+	Log "Se connecter à Github ..."
+	set myUrl to "https://github.com/login"
+	TypeText windowsKey, "r"
+	wait 0.5
+	typeText "chrome.exe" && myUrl && "--start-maximized" && "--incognito", returnKey
+	WaitFor 30.0, "chrome_icone_chargement"
+	logSuccess "Ouvrir le navigateur: OK"
+
+	Click text:"Username or email address"
+
+	Log "Ouvrir Keepass, l'utiliser pour taper les credentials ..."
+	Log "|   Ouvrir Keepass ..."
+	TypeText windowsKey, "r"
+	wait 0.5
+	set cmd to "C:\Program Files\KeePass Password Safe 2\KeePass.exe" && <<"C:\Users\lucibill\OneDrive - Keysight Technologies\Documents\Keepass\test-EPF.kdbx">>
+	typeText cmd, returnKey
+	WaitFor 8.0, "keepass_keys_logo"
+	wait 0.5
+
+	Log "|   Déverrouiller le coffre ..."
+	set cryptKey to env("EPF_SECRET_KEY")
+	set encodedSecret to "TZCSfHeXQARHBS[WMULXHD\MOUJFSZbJEN@ePLGgUJDX>J>IQFRQ=KPVVWWXW\Jd"
+
+	TypeHiddenText DecodeText(encodedSecret, cryptKey)
+	typeText  returnkey
+	WaitForAll 25, "keepass_icon_lock",  "keepasslogo_topmenu"
+
+	Log "|   Utiliser l'auto-type de Keepass pour le login / mot de passe GitHub ..."
+	click text:"GitHub with OTP", validwords:"*"
+	wait 0.5
+	TypeText controlKey, "v"
+	wait 5	
+
+	Log "|   Utiliser le code OTP ..."
+	waitfor 30, text:"Two-factor authentication"
+	typeText altKey, tabkey
+	wait 1
+	TypeText controlKey, "t"
+	wait 0.5
+	TypeText altKey, tabKey
+	wait 1
+	TypeText shiftKey, insertkey
+	TypeText returnKey
+	wait 2
+
+	Log "|   Vérifier qu'on est bien authentifié ..."
+	WaitFor 30, text:"You've been added to the keysight-eggplant organization."
+	LogSuccess "Se connecter à Github : OK"
+end je_m_authentifie_a_github
+
+to je_vais_sur_le_repo_de_test	
+	Log "Aller sur la page de test ..."
+	typeText f6
+	typeText "https://github.com/lucienbill/obsidian-daily-notes", returnkey
+	wait 1
+	waitfor 10, text:"lucienbill/obsidian-daily-notes", SearchRectangle: [0,93,RemoteScreenSize().x, 300], IgnoreSpaces:YES
+	LogSuccess "Aller sur la page de test OK"
+end je_vais_sur_le_repo_de_test
+
+to j_ouvre_vs_code_online	
+	Log "Ouvrir VS Code en ligne ..."
+	typeText "."
+	wait 5
+	waitforAll 60, {text:"github.dev/lucienbill/obsidian-daily-notes", SearchRectangle:empty}, {text:"The extension 'GitHub Repositories' wants to sign in using GitHub."}
+
+	Log "Autoriser le login et attendre le chargement du repo ..."
+	click text:"Allow"
+	wait 1
+	click text:"lucienbill-ks"
+	wait 4
+	WaitFor 30, text:"What's that thing for (description)?"
+	LogSuccess "Autoriser le login et attendre le chargement du repo : OK"
+
+	LogSuccess "Ouvrir VS Code en ligne : OK"
+end j_ouvre_vs_code_online
+
+to je_cree_un_nouveau_fichier_dans_vscode	
+	Log "Vérifier qu'on peut créer un nouveau fichier ..."
+	MoveTo text:"en-US", waitFor:30
+	click "vscode_create_new_file"
+	wait 2
+
+	typeText "aubergine.md", returnkey
+	wait 2
+	
+	LogSuccess "Vérifier qu'on peut créer un nouveau fichier : OK"
+end je_cree_un_nouveau_fichier_dans_vscode
+
+
+to j_ecris_dans_le_nouveau_fichier_dans_vscode
+	log "Ecrire dans le nouveau fichier ..."
+	typeText "this is a new file!", returnkey
+	WaitFor 4, text:"this is a new file!"
+	logSuccess "Ecrire dans le nouveau fichier : OK"
+end j_ecris_dans_le_nouveau_fichier_dans_vscode
+
+
+to je_supprimme_le_nouveau_fichier_dans_vscode	
+	Log "Supprimer le fichier ..."
+	// subtilité : le nom est présent à plusieurs endroits, on fait un click droit sur celui qui est le plus à gauche de l'écran
+	set myList to EveryImageLocation(text:"aubergine.md")
+	set ref_coord to RemoteScreenSize()
+	Repeat with each item myCoord of myList
+		// keep the one that is more on the left
+		if myCoord.x is less than ref_coord
+			set ref_coord to myCoord
+		end if
+	End repeat
+
+	RightClick ref_coord
+	Click text:"Allow", waitfor:15
+
+
+	// supprimer le fichier
+	wait 1
+	click text: "Delete Permanently"
+	wait 1
+	waitfor 30, text: "Are you sure you want to permanently delete"
+	typeText returnkey	
+	wait 1
+	WaitForNotFound 15, text: "aubergine.md"
+	LogSuccess "Supprimer le fichier : OK"
+end je_supprimme_le_nouveau_fichier_dans_vscode
+
+to je_quitte_les_applications	
+	Log "Tout fermer ..."
+	typeText altkey, f4
+	wait 0.5
+	WaitFor 15, text:"Leave site?"
+	typeText returnkey
+	WaitForNotFound 15, "chrome_icone_chargement"
+
+
+	typeText altkey, f4
+	WaitForNotFound 15, "keepasslogo_topmenu"
+	LogSuccess "Tout fermer : OK"
+end je_quitte_les_applications
+
