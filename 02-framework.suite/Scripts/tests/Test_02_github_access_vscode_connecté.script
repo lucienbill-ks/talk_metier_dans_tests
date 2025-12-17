@@ -2,8 +2,10 @@
 "steps/github".je_m_authentifie_a_github
 "steps/github".je_vais_sur_le_repo_de_test
 
+// Les fonctions peuvent etres dans des fichiers...
 "steps/github".je_tente_d_ouvrir_vs_code_online
-"steps/vscode_online/etat_app".je_verifie_que_vscode_online_s_est_ouvert
+// Ou les fonctionens peuvent etre des fichiers (permet de glisser/déposer dans le script)
+Run "steps/vscode_online/etat_app/je_verifie_que_vscode_online_s_est_ouvert"
 
 
 "steps/vscode_online/manipuler_fichiers".je_cree_un_nouveau_fichier_dans_vscode
