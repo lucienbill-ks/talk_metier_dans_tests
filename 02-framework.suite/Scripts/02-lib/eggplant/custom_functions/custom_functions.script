@@ -1,102 +1,26 @@
-﻿// These are some custom functions to exten SenseTalk's native capabilitie
+﻿// These are some custom functions to extend SenseTalk's native capabilities
+// Most of these are not needed, this is mostly a demo of "yes, it can be done"
 
 // =======================
 // CUSTOM FUNCTIONS
 // =======================
 
 to cliquer text_or_img_or_options:empty, moreOptions:{}
-	set options to "_lib/eggplant/_lib"._parse_parameters_for_image_or_txt_search(text_or_img_or_options, moreOptions)
+	set options to "02-lib/eggplant/_lib"._parse_parameters_for_image_or_txt_search(text_or_img_or_options, moreOptions)
 	click options
 end cliquer
 
 
 to cliquerDroit with text_or_img_or_options:empty, moreOptions:{}
-	set options to "_lib/eggplant/_lib"._parse_parameters_for_image_or_txt_search(text_or_img_or_options, moreOptions)
+	set options to "02-lib/eggplant/_lib"._parse_parameters_for_image_or_txt_search(text_or_img_or_options, moreOptions)
 	RightClick options
 end cliquerDroit
 
 to attendre with text_or_img_or_options, moreOptions:{}
-	set params to "_lib/eggplant/_lib"._parse_parameters_for_image_or_txt_search_waitfor(text_or_img_or_options, moreOptions)
+	set params to "02-lib/eggplant/_lib"._parse_parameters_for_image_or_txt_search_waitfor(text_or_img_or_options, moreOptions)
 	waitfor the first item of params, the second item of params
 	// log "waitfor" &&  the first item of params &"," && the second item of params // DEBUG
 end attendre
-
-to logFct 
-	// Goal: to log the entering / exiting of functions
-	// At the beginging of the function (such as: to myfunction param_1, param_2), call it like this:
-	// logFct param_1, param_2
-	//
-	// At the end of the function, just call it again
-	// logFct
-	//
-	// caveat: if you use try/catch when calling a function that uses logFct, do this:
-	//
-	// Try
-	// 	myfunction "this will fail"
-	// Catch theException
-	// 	delete the last item of global fct_stack
-	// 	delete the last item of global param_stack
-	// 	
-	// 	// Then do your things
-	// End try
-	
-	
-	global fct_stack, param_stack
-	if fct_stack is empty then 
-		set fct_stack to []
-		set param_stack to []
-	end if
-	
-	// build the string to display
-	set current_function to the Handler of the second-to-last item of the callStack 
-	
-	// Are we entering or leaving the function?
-	set is_entering_function to (the last item of fct_stack is not current_function)
-	
-	
-	
-	
-	if is_entering_function then
-		set param_str to the params
-		delete param(0) from param_str
-		
-		// PREFIX
-		set identPrefix to ""
-		set nb_iterations to the number of items of fct_stack
-		Repeat nb_iterations times
-			set identPrefix to identPrefix && "|"
-		End repeat
-		if nb_iterations is greater than -1 then set identPrefix to identPrefix && "|⎻"
-		set prefix to identPrefix // && "Func START: "
-		// --------------
-		
-		if param_str is not << "">> then
-			log prefix && current_function && param_str
-		else
-			log prefix && current_function
-		end if
-		insert current_function into fct_stack
-		insert param_str into param_stack
-	else // we are leaving the function
-		set param_str to the last item of param_stack
-		
-		// PREFIX
-		set identPrefix to ""
-		set nb_iterations to the number of items of fct_stack
-		Repeat nb_iterations -1 times
-			set identPrefix to identPrefix && "|"
-		End repeat
-		if nb_iterations is greater than 0 then set identPrefix to identPrefix && "|_"
-		set prefix to identPrefix // && "Func END  : "
-		// --------------
-		
-		logSuccess prefix && current_function & " (OK)"
-		
-		delete the last item of fct_stack
-		delete the last item of param_stack
-	end if
-end logFct
-
 
 to get_rectangle_between_2_elements topLeft_element:empty, bottomRightElement:empty
 	// This function draws a rectangle between top left of first element and bottom right of second element
@@ -115,7 +39,7 @@ end get_rectangle_between_2_elements
 // TWEAKING STANDARD SENSETALK FUNCTIONS
 // ==============================
 
-
+(*
 to click myparameters
 	Try
 		put "click" && myparameters
@@ -144,6 +68,7 @@ to waitfor timeout, arguments
 		throw theException // Goal: make use of the extra stack info of the modified "Throw" function
 	End try
 end waitfor
+*)
 
 to ImageRectangle myparam
 	// rewriting this function so that it has a default timeout of 30 seconds
@@ -170,7 +95,7 @@ end ImageRectangle
 
 to Throw with theException, thereason
 	// This is a rewrite of the standard "Throw" function,
-	// but it writes addisional callstack information in the error message
+	// but it writes additional callstack information in the error message
 	
 	set stk to the callStack
 	delete the last item of stk

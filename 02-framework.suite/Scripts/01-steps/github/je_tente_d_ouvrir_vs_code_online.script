@@ -1,0 +1,4 @@
+logfct
+typeText "."
+wait 5
+logfct

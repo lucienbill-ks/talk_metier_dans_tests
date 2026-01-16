@@ -1,9 +1,9 @@
 ﻿params dummyparam_1:"foobar", dummyparam_2:empty // Paramètres avec des valeurs par défaut
 logfct dummyparam_1, dummyparam_2
 wait 2
-"_lib/chrome".attendre_que_le_chargement_de_la_page_soit_fini
+"02-lib/chrome".attendre_que_le_chargement_de_la_page_soit_fini
 WaitForNotFound 5, text:"github.dev"
-set repo_url to "_lib/github".get_test_repo_url
+set repo_url to "02-lib/github".get_test_repo_url
 delete "https://" from repo_url
 attendre repo_url, SearchRectangle: [0,0,RemoteScreenSize().x, 93]
 delete "github.com/" from repo_url

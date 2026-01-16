@@ -1,10 +1,11 @@
 ﻿to je_quitte_keepass_si_ouvert
 	logfct
+	//FIXME : c'est une logique simplifiée pour la démo
 	if imagefound(image:"keepass/logo_topmenu", waitfor:5)
 		typeText altkey, f4
 		WaitForNotFound 15, "keepass/logo_topmenu"
 	end if
-	WaitForNotFound 15, "keepass/taskbar_icon_active" //FIXME : c'est une logique simplifiée pour la démo
+	WaitForNotFound 15, "keepass/taskbar_icon_active" 
 	logfct
 end je_quitte_keepass_si_ouvert
 
@@ -12,7 +13,7 @@ to ouvrir_et_deverouiller_keepass
 	logfct
 	set path_to_vault to <<"C:\Users\lucibill\OneDrive - Keysight Technologies\Documents\Keepass\test-EPF.kdbx">>
 	set cmd to "C:\Program Files\KeePass Password Safe 2\KeePass.exe" && path_to_vault
-	"_lib/system".je_lance_une_commande_windows_r cmd
+	"02-lib/system".je_lance_une_commande_windows_r cmd
 	
 	attendre "keepass/keys_logo"
 	wait 0.5

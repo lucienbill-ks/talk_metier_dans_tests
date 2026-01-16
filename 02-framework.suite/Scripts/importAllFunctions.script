@@ -4,7 +4,13 @@
 // Les sous-dossiers sont gérés
 
 if scriptDirPath is empty
-	set scriptDirPath to the resolvedfilePath of ( ResourcePath() & "/../Scripts/steps")
+	set errmsg to <<Please specify a directory that contains functions to import
+Example:
+	the resolvedfilePath of ( ResourcePath() & "/../Scripts/steps")
+	  (note : this will import all functions defined in the specified directory, and its subdirectories)
+>>
+
+	Throw "importAllFunctions: missing mandatory parameter", errmsg
 end if
 
 set listOfStepFiles to files of scriptDirPath
@@ -15,7 +21,7 @@ Repeat with each item myFile of listOfStepFiles
 End repeat
 
 Repeat with each item mySubfolder of listOfSubfolders
-	run importAllSteps scriptDirPath & "/" & mySubfolder
+	run importAllFunctions scriptDirPath & "/" & mySubfolder
 End repeat
 
 

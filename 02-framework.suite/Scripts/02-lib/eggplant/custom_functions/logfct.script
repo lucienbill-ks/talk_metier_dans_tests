@@ -1,0 +1,70 @@
+// Goal: to log the entering / exiting of functions
+// At the beginging of the function (such as: to myfunction param_1, param_2), call it like this:
+// logFct param_1, param_2
+//
+// At the end of the function, just call it again
+// logFct
+//
+// caveat: if you use try/catch when calling a function that uses logFct, do this:
+//
+// Try
+// 	myfunction "this will fail"
+// Catch theException
+// 	delete the last item of global fct_stack
+// 	delete the last item of global param_stack
+// 	
+// 	// Then do your things
+// End try
+
+
+global fct_stack, param_stack
+if fct_stack is empty then 
+	set fct_stack to []
+	set param_stack to []
+end if
+
+// build the string to display
+set current_function to the Handler of the second-to-last item of the callStack 
+
+// Are we entering or leaving the function?
+set is_entering_function to (the last item of fct_stack is not current_function)
+
+if is_entering_function then
+	set param_str to the params
+	delete param(0) from param_str
+	
+	// PREFIX
+	set identPrefix to ""
+	set nb_iterations to the number of items of fct_stack
+	Repeat nb_iterations times
+		set identPrefix to identPrefix && "|"
+	End repeat
+	if nb_iterations is greater than -1 then set identPrefix to identPrefix && "|⎻ ▶️ "
+	set prefix to identPrefix // && "Func START: "
+	// --------------
+	
+	if param_str is not << "">> then
+		put prefix && current_function && param_str
+	else
+		put prefix && current_function
+	end if
+	insert current_function into fct_stack
+	insert param_str into param_stack
+else // we are leaving the function
+	set param_str to the last item of param_stack
+	
+	// PREFIX
+	set identPrefix to ""
+	set nb_iterations to the number of items of fct_stack
+	Repeat nb_iterations -1 times
+		set identPrefix to identPrefix && "|"
+	End repeat
+	if nb_iterations is greater than 0 then set identPrefix to identPrefix && "|_ ✅"
+	set prefix to identPrefix // && "Func END  : "
+	// --------------
+	
+	put prefix && current_function & " (OK)"
+	
+	delete the last item of fct_stack
+	delete the last item of param_stack
+end if

@@ -5,12 +5,12 @@
 	wait 1 
 	if imagefound(text:"Leave site?", waitfor:4, searchRectangle:empty) then typeText returnkey
 	WaitForNotFound 15, "chrome/icone_chargement"
-	if "_lib/chrome".bool_chrome_est_il_ouvert()
+	if "02-lib/chrome".bool_chrome_est_il_ouvert()
 		Throw "Echec de la fermeture du navigateur", "voir capture d'écran"
 	end if
 	
 	// Fermer Keepass s'il est ouvert
-	"_lib/keepass".je_quitte_keepass_si_ouvert
+	"02-lib/keepass".je_quitte_keepass_si_ouvert
 	
 	logfct
 end je_quitte_les_applications

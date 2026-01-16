@@ -1,0 +1,3 @@
+logfct
+"02-lib/chrome".aller_a_url "02-lib/github".get_test_repo_url()
+logfct

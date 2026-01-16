@@ -1,0 +1,15 @@
+logfct
+"02-lib/chrome".aller_a_url "github.com/login"
+
+cliquer "Username or email address"
+
+"02-lib/keepass".ouvrir_et_deverouiller_keepass
+
+"02-lib/keepass".utiliser_autotype_de_entree_x "GitHub with OTP"
+
+attendre "Two-factor authentication"
+
+"02-lib/keepass".utiliser_code_otp_de_entree_selectionnee
+
+attendre "You've been added to the keysight-eggplant organization."
+logfct
