@@ -3,6 +3,7 @@
 	//FIXME : c'est une logique simplifiée pour la démo
 	if imagefound(image:"keepass/logo_topmenu", waitfor:5)
 		typeText altkey, f4
+		wait 1 // animation
 		WaitForNotFound 15, "keepass/logo_topmenu"
 	end if
 	WaitForNotFound 15, "keepass/taskbar_icon_active" 
@@ -26,29 +27,30 @@ to ouvrir_et_deverouiller_keepass
 	
 	TypeHiddenText DecodeText(encodedSecret, cryptKey)
 	typeText  returnkey
-	WaitForAll 25, "keepass/icon_lock",  "keepass/logo_topmenu"
+	wait 3 // UI animation
+	WaitForAll 30, "keepass/icon_lock",  "keepass/logo_topmenu"
 	logfct
 end ouvrir_et_deverouiller_keepass
 
 to utiliser_autotype_de_entree_x myItem
 	logfct myItem
 	click text: myItem, validwords:"*"
-	wait 0.5
+	wait 0.5 // UI animation
 	TypeText controlKey, "v"
-	wait 5	
+	wait 5 // UI animation
 	logfct
 end utiliser_autotype_de_entree_x
 
 to utiliser_code_otp_de_entree_selectionnee
 	logfct
 	typeText altKey, tabkey // FIXME potentiellement à sortir hors de cette fonction
-	wait 1
+	wait 1 // UI animation
 	TypeText controlKey, "t"
-	wait 0.5
+	wait 0.5 // UI animation
 	TypeText altKey, tabKey
-	wait 1
+	wait 1 // UI animation
 	TypeText shiftKey, insertkey
 	TypeText returnKey
-	wait 2
+	wait 2 // UI animation
 	logfct
 end utiliser_code_otp_de_entree_selectionnee

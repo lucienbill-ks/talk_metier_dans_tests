@@ -1,4 +1,6 @@
 ﻿BeginTestCase "GitHub: vérifier peut accéder à VS Code online quand on est authentifié"
+j_initialise_le_systeme
+
 je_m_authentifie_a_github
 je_vais_sur_le_repo_de_test
 
@@ -10,5 +12,4 @@ je_cree_un_nouveau_fichier_dans_vscode
 j_ecris_dans_le_nouveau_fichier_dans_vscode
 je_supprimme_le_nouveau_fichier_dans_vscode
 
-je_quitte_les_applications
 EndTestCase "GitHub: vérifier peut accéder à VS Code online quand on est authentifié"

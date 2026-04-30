@@ -1,13 +1,13 @@
 ﻿to je_cree_un_nouveau_fichier_dans_vscode
 	logfct
-	MoveTo text:"en-US", waitFor:30
+	MoveTo text:"en-US"
 	click "vscode/create_new_file"
-	wait 2
+	wait 2 // UI animation
 	
 	set filename to "aubergine.md"
 	
 	typeText filename, returnkey
-	wait 2
+	wait 2 // UI animation
 	waitfor 30, text: filename
 	logfct
 end je_cree_un_nouveau_fichier_dans_vscode
@@ -15,7 +15,8 @@ end je_cree_un_nouveau_fichier_dans_vscode
 to j_ecris_dans_le_nouveau_fichier_dans_vscode
 	logfct
 	typeText "this is a new file!", returnkey
-	WaitFor 4, text:"this is a new file!"
+	wait 0.5 // UI animation
+	WaitFor 30, text:"this is a new file!"
 	logfct
 end j_ecris_dans_le_nouveau_fichier_dans_vscode
 
@@ -35,14 +36,14 @@ to je_supprimme_le_nouveau_fichier_dans_vscode
 	rightclick ref_coord
 	click text:"Allow"
 	
-	
-	// supprimer le fichier
-	wait 1
+	// Make Eggplant a bit slower temporarilly, to make it faster (by ignoring UI loading times)
+	//supprimer le fichier
+	wait 1 // UI animation
 	click text: "Delete Permanently"
-	wait 1
+	wait 1 // UI animation
 	waitfor 30, text:  "Are you sure you want to permanently delete"
 	typeText returnkey	
-	wait 1
+	wait 2 // UI animation
 	WaitForNotFound 15, text: filename
 	logfct
 end je_supprimme_le_nouveau_fichier_dans_vscode

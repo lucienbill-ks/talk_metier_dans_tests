@@ -1,16 +1,12 @@
-﻿to je_quitte_les_applications
+﻿to j_initialise_le_systeme
 	logfct
 	// Fermer Chrome
-	typeText altKey, f4
+	"02_lib/system".je_lance_une_commande_windows_r "taskkill /F /IM chrome.exe /T"
 	wait 1 
-	if imagefound(text:"Leave site?", waitfor:4, searchRectangle:empty) then typeText returnkey
 	WaitForNotFound 15, "chrome/icone_chargement"
-	if "02_lib/chrome".bool_chrome_est_il_ouvert()
-		Throw "Echec de la fermeture du navigateur", "voir capture d'écran"
-	end if
 	
 	// Fermer Keepass s'il est ouvert
 	"02_lib/keepass".je_quitte_keepass_si_ouvert
 	
 	logfct
-end je_quitte_les_applications
+end j_initialise_le_systeme

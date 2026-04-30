@@ -1,8 +1,8 @@
 ﻿to je_lance_une_commande_windows_r cmd:empty
 	TypeText windowsKey, "r"
-	wait 0.5
+	wait 0.5 // UI animation
 	typeText cmd, returnKey
-	wait 1
+	wait 1 // UI animation
 end je_lance_une_commande_windows_r
 
 to zoneEcran nomZone
