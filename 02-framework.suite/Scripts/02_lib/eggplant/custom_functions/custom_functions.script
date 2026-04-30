@@ -5,12 +5,6 @@
 // CUSTOM FUNCTIONS
 // =======================
 
-to attendre with text_or_img_or_options, moreOptions:{}
-	set params to "02_lib/eggplant/_lib"._parse_parameters_for_image_or_txt_search_waitfor(text_or_img_or_options, moreOptions)
-	waitfor the first item of params, the second item of params
-	// log "waitfor" &&  the first item of params &"," && the second item of params // DEBUG
-end attendre
-
 to get_rectangle_between_2_elements topLeft_element:empty, bottomRightElement:empty
 	// This function draws a rectangle between top left of first element and bottom right of second element
 	// Each element can be a text or an image, but no fancy OCR options.

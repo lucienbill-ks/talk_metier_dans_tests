@@ -15,7 +15,7 @@ to ouvrir_et_deverouiller_keepass
 	set cmd to "C:\Program Files\KeePass Password Safe 2\KeePass.exe" && path_to_vault
 	"02_lib/system".je_lance_une_commande_windows_r cmd
 	
-	attendre "keepass/keys_logo"
+	waitfor 30, image: "keepass/keys_logo"
 	wait 0.5
 	
 	set cryptKey to env("EPF_SECRET_KEY")

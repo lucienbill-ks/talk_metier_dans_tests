@@ -5,7 +5,7 @@ wait 2
 WaitForNotFound 5, text:"github.dev"
 set repo_url to "02_lib/github".get_test_repo_url
 delete "https://" from repo_url
-attendre repo_url, SearchRectangle: [0,0,RemoteScreenSize().x, 93]
+waitfor 30, text: repo_url, SearchRectangle: [0,0,RemoteScreenSize().x, 93]
 delete "github.com/" from repo_url
-attendre repo_url, SearchRectangle: [0,93,RemoteScreenSize().x, 300], IgnoreSpaces:YES
+waitfor 30, text: repo_url, SearchRectangle: [0,93,RemoteScreenSize().x, 300], IgnoreSpaces:YES
 logfct

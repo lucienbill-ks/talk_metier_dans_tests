@@ -8,7 +8,7 @@
 	
 	typeText filename, returnkey
 	wait 2
-	attendre filename
+	waitfor 30, text: filename
 	logfct
 end je_cree_un_nouveau_fichier_dans_vscode
 
@@ -40,7 +40,7 @@ to je_supprimme_le_nouveau_fichier_dans_vscode
 	wait 1
 	click text: "Delete Permanently"
 	wait 1
-	attendre  "Are you sure you want to permanently delete"
+	waitfor 30, text:  "Are you sure you want to permanently delete"
 	typeText returnkey	
 	wait 1
 	WaitForNotFound 15, text: filename

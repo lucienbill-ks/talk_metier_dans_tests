@@ -4,12 +4,6 @@
 // CUSTOM FUNCTIONS
 // =======================
 
-to attendre with text_or_img_or_options, moreOptions:{}
-	set params to "_lib/eggplant/_lib"._parse_parameters_for_image_or_txt_search_waitfor(text_or_img_or_options, moreOptions)
-	waitfor the first item of params, the second item of params
-	// log "waitfor" &&  the first item of params &"," && the second item of params // DEBUG
-end attendre
-
 to logFct 
 	// Goal: to log the entering / exiting of functions
 	// At the beginging of the function (such as: to myfunction param_1, param_2), call it like this:
