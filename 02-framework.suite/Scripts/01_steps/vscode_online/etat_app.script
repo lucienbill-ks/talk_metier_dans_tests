@@ -1,27 +1,27 @@
-to je_verifie_que_vscode_online_n_est_pas_ouvert
-    logfct
-    wait 2
-    "02_lib/chrome".attendre_que_le_chargement_de_la_page_soit_fini
-    WaitForNotFound 5, text:"github.dev"
-    set repo_url to "02_lib/github".get_test_repo_url
-    delete "https://" from repo_url
-    waitfor 30, text: repo_url, SearchRectangle: [0,0,RemoteScreenSize().x, 93]
-    delete "github.com/" from repo_url
-    waitfor 30, text: repo_url, SearchRectangle: [0,93,RemoteScreenSize().x, 300], IgnoreSpaces:YES
-    logfct
+﻿to je_verifie_que_vscode_online_n_est_pas_ouvert
+	logfct
+	wait 2
+	"02_lib/chrome".attendre_que_le_chargement_de_la_page_soit_fini
+	WaitForNotFound 5, text:"github.dev"
+	set repo_url to "02_lib/github".get_test_repo_url
+	delete "https://" from repo_url
+	waitfor 30, text: repo_url, SearchRectangle: [0,0,RemoteScreenSize().x, 93]
+	delete "github.com/" from repo_url
+	waitfor 30, text: repo_url, SearchRectangle: [0,93,RemoteScreenSize().x, 300], IgnoreSpaces:YES
+	logfct
 end je_verifie_que_vscode_online_n_est_pas_ouvert
 
 to je_verifie_que_vscode_online_s_est_ouvert
-    logfct
-    waitfor 30, text: "github.dev/lucienbill/obsidian-daily-notes", SearchRectangle:empty
-    wait 4 // FIXME : on peut faire plus subtil
-    waitfor 30, text: "The extension 'GitHub Repositories' wants to sign in using GitHub."
-
-    Log "Autoriser le login et attendre le chargement du repo ..."
-    click "Allow"
-    wait 1
-    click "lucienbill-ks"
-    wait 4
-    waitfor 30, text: "What's that thing for (description)?"
-    logfct
+	logfct
+	waitfor 30, text: "github.dev/lucienbill/obsidian-daily-notes", SearchRectangle:empty
+	wait 4 // FIXME : on peut faire plus subtil
+	waitfor 30, text: "The extension 'GitHub Repositories' wants to sign in using GitHub."
+	
+	Log "Autoriser le login et attendre le chargement du repo ..."
+	click text: "Allow"
+	wait 1
+	click  text: "lucienbill-ks"
+	wait 4
+	waitfor 30, text: "What's that thing for (description)?"
+	logfct
 end je_verifie_que_vscode_online_s_est_ouvert
