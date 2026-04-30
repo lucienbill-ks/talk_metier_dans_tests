@@ -1,7 +1,7 @@
 ﻿to je_cree_un_nouveau_fichier_dans_vscode
 	logfct
 	MoveTo text:"en-US", waitFor:30
-	cliquer "vscode/create_new_file"
+	click "vscode/create_new_file"
 	wait 2
 	
 	set filename to "aubergine.md"
@@ -33,12 +33,12 @@ to je_supprimme_le_nouveau_fichier_dans_vscode
 	End repeat
 	
 	rightclick ref_coord
-	cliquer text:"Allow", waitfor:15
+	click text:"Allow"
 	
 	
 	// supprimer le fichier
 	wait 1
-	cliquer "Delete Permanently"
+	click text: "Delete Permanently"
 	wait 1
 	attendre  "Are you sure you want to permanently delete"
 	typeText returnkey	

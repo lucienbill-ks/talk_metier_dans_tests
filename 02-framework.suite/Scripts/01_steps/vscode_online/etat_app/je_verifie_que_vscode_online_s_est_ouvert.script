@@ -4,9 +4,9 @@ wait 4 // FIXME : on peut faire plus subtil
 attendre "The extension 'GitHub Repositories' wants to sign in using GitHub."
 
 Log "Autoriser le login et attendre le chargement du repo ..."
-cliquer "Allow"
+click "Allow"
 wait 1
-cliquer "lucienbill-ks"
+click "lucienbill-ks"
 wait 4
 attendre "What's that thing for (description)?"
 logfct

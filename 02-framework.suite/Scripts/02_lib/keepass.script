@@ -32,7 +32,7 @@ end ouvrir_et_deverouiller_keepass
 
 to utiliser_autotype_de_entree_x myItem
 	logfct myItem
-	cliquer myItem, validwords:"*"
+	click text: myItem, validwords:"*"
 	wait 0.5
 	TypeText controlKey, "v"
 	wait 5	
