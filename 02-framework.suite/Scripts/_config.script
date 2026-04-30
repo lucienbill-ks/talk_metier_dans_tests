@@ -1,7 +1,7 @@
 ﻿set the sendShiftForCaps to no // for my azerty keyboard
 set the ScriptLogging to yes
 
-run importAllFunctions the resolvedfilePath of ( ResourcePath() & "/../Scripts/02-lib/eggplant/custom_functions")
-run importAllFunctions the resolvedfilePath of ( ResourcePath() & "/../Scripts/01-steps")
+run importAllFunctions the resolvedfilePath of ( ResourcePath() & "/../Scripts/02_lib/eggplant/custom_functions")
+run importAllFunctions the resolvedfilePath of ( ResourcePath() & "/../Scripts/01_steps")
 
 wait 2 //DEBUG, for the demo

@@ -13,7 +13,7 @@ to ouvrir_et_deverouiller_keepass
 	logfct
 	set path_to_vault to <<"C:\Users\lucibill\OneDrive - Keysight Technologies\Documents\Keepass\test-EPF.kdbx">>
 	set cmd to "C:\Program Files\KeePass Password Safe 2\KeePass.exe" && path_to_vault
-	"02-lib/system".je_lance_une_commande_windows_r cmd
+	"02_lib/system".je_lance_une_commande_windows_r cmd
 	
 	attendre "keepass/keys_logo"
 	wait 0.5
