@@ -5,18 +5,6 @@
 // CUSTOM FUNCTIONS
 // =======================
 
-to get_rectangle_between_2_elements topLeft_element:empty, bottomRightElement:empty
-	// This function draws a rectangle between top left of first element and bottom right of second element
-	// Each element can be a text or an image, but no fancy OCR options.
-	// If you need something fancier, use something else
-	
-	do_waitfor topLeft_element
-	set TL to FoundImageInfo().imageRectangle.topLeft
-	do_waitfor bottomRightElement
-	set BR to FoundImageInfo().imageRectangle.bottomRight
-	
-	return [TL, BR]
-end get_rectangle_between_2_elements
 
 // ==============================
 // TWEAKING STANDARD SENSETALK FUNCTIONS
@@ -75,7 +63,7 @@ to ImageRectangle myparam
 	
 end ImageRectangle
 
-
+(*
 to Throw with theException, thereason
 	// This is a rewrite of the standard "Throw" function,
 	// but it writes additional callstack information in the error message
@@ -104,6 +92,7 @@ to Throw with theException, thereason
 	
 	send throw theException, thereason to SenseTalk
 end Throw
+*)
 
 to ScrollWheelUp scrollAmount
 	send ScrollWheelUp scrollAmount to SenseTalk
