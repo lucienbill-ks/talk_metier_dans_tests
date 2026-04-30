@@ -52,9 +52,9 @@ to logfct
 		// --------------
 		
 		if param_str is not << "">> then
-			put prefix && current_function && param_str
+			log prefix && current_function && param_str
 		else
-			put prefix && current_function
+			log prefix && current_function
 		end if
 		insert current_function into fct_stack
 		insert param_str into param_stack
@@ -71,7 +71,7 @@ to logfct
 		set prefix to identPrefix // && "Func END  : "
 		// --------------
 		
-		put prefix && current_function & " (OK)"
+		log prefix && current_function & " (OK)"
 		
 		delete the last item of fct_stack
 		delete the last item of param_stack
