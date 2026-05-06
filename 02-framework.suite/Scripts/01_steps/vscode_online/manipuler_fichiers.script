@@ -1,10 +1,12 @@
-﻿to je_cree_un_nouveau_fichier_dans_vscode
+﻿to je_cree_un_nouveau_fichier_dans_vscode filename:"aubergine.md"
+	// Note: the 'filename:"aubergine.md"' instruction above means:
+	// If this function does not receive a filename, then it will 
+	// default to the value "aubergine.md"
+
 	logfct
 	MoveTo text:"en-US"
 	click "vscode/create_new_file"
 	wait 2 // UI animation
-	
-	set filename to "aubergine.md"
 	
 	typeText filename, returnkey
 	wait 2 // UI animation
@@ -20,9 +22,9 @@ to j_ecris_dans_le_nouveau_fichier_dans_vscode
 	logfct
 end j_ecris_dans_le_nouveau_fichier_dans_vscode
 
-to je_supprimme_le_nouveau_fichier_dans_vscode
+to je_supprimme_le_nouveau_fichier_dans_vscode filename:"aubergine.md"
+
 	logfct
-	set filename to "aubergine.md"
 	// subtilité : le nom est présent à plusieurs endroits, on fait un click droit sur celui qui est le plus à gauche de l'écran
 	set myList to EveryImageLocation(text:filename)
 	set ref_coord to RemoteScreenSize()

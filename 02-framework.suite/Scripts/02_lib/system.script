@@ -1,4 +1,4 @@
-﻿to je_lance_une_commande_windows_r cmd:empty
+﻿to je_lance_une_commande_windows_r cmd
 	TypeText windowsKey, "r"
 	wait 0.5 // UI animation
 	typeText cmd, returnKey
