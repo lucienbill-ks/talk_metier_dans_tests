@@ -23,20 +23,37 @@ to logfct
 	// 	
 	// 	// Then do your things
 	// End try
-
-
+	
+	
 	global fct_stack, param_stack
 	if fct_stack is empty then 
 		set fct_stack to []
 		set param_stack to []
 	end if
-
+	
 	// build the string to display
-	set current_function to the Handler of the second-to-last item of the callStack 
-
+	set current_function to the second-to-last item of the callStack
+	
+	set scriptPath to current_function.ScriptObjectID
+	
+	split scriptPath by ".suite/Scripts/"
+	set scriptPath to the last item of scriptPath
+	delete ".script" from scriptPath
+	
+	set scriptName to scriptPath
+	split scriptName by "/"
+	set scriptName to the last item of scriptName
+	
+	set fullHandler to scriptPath
+	if scriptName is not current_function.handler // the function is one of many in the script
+		set fullHandler to fullHandler & ">" & current_function.handler 
+	end if
+	
+	set current_function to fullHandler
+	
 	// Are we entering or leaving the function?
 	set is_entering_function to (the last item of fct_stack is not current_function)
-
+	
 	if is_entering_function then
 		set param_str to the params
 		delete param(0) from param_str
@@ -67,7 +84,7 @@ to logfct
 		Repeat nb_iterations -1 times
 			set identPrefix to identPrefix && "|"
 		End repeat
-		if nb_iterations is greater than 0 then set identPrefix to identPrefix && "|_ ✅"
+		if nb_iterations is greater than 0 then set identPrefix to identPrefix && "|_ ☑️"
 		set prefix to identPrefix // && "Func END  : "
 		// --------------
 		
@@ -76,7 +93,7 @@ to logfct
 		delete the last item of fct_stack
 		delete the last item of param_stack
 	end if
-
+	
 end logfct
 
 // ==============================
